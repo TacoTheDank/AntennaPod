@@ -1,39 +1,37 @@
 <?xml version="1.0" encoding="utf-8"?>
-<menu xmlns:android="http://schemas.android.com/apk/res/android"
-      xmlns:custom="http://schemas.android.com/apk/res-auto">
+<menu
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:custom="http://schemas.android.com/apk/res-auto">
 
     <item
         android:id="@id/skip_episode_item"
         android:title="@string/skip_episode_label"
-        custom:showAsAction="collapseActionView">
-    </item>
+        custom:showAsAction="collapseActionView" />
 
     <item
         android:id="@+id/remove_new_flag_item"
-        custom:showAsAction="collapseActionView"
-        android:title="@string/remove_new_flag_label" />
+        android:title="@string/remove_new_flag_label"
+        custom:showAsAction="collapseActionView" />
 
     <item
         android:id="@+id/mark_read_item"
-        custom:showAsAction="collapseActionView"
-        android:title="@string/mark_read_label">
-    </item>
+        android:title="@string/mark_read_label"
+        custom:showAsAction="collapseActionView" />
+
     <item
         android:id="@+id/mark_unread_item"
-        custom:showAsAction="collapseActionView"
-        android:title="@string/mark_unread_label">
-    </item>
+        android:title="@string/mark_unread_label"
+        custom:showAsAction="collapseActionView" />
 
     <item
         android:id="@+id/add_to_queue_item"
-        custom:showAsAction="collapseActionView"
-        android:title="@string/add_to_queue_label">
-    </item>
+        android:title="@string/add_to_queue_label"
+        custom:showAsAction="collapseActionView" />
+
     <item
         android:id="@+id/remove_from_queue_item"
-        custom:showAsAction="collapseActionView"
-        android:title="@string/remove_from_queue_label">
-    </item>
+        android:title="@string/remove_from_queue_label"
+        custom:showAsAction="collapseActionView" />
 
     <item
         android:id="@+id/add_to_favorites_item"
@@ -47,25 +45,23 @@
 
     <item
         android:id="@+id/reset_position"
-        custom:showAsAction="collapseActionView"
-        android:title="@string/reset_position">
-    </item>
+        android:title="@string/reset_position"
+        custom:showAsAction="collapseActionView" />
+
     <item
         android:id="@+id/visit_website_item"
         android:icon="@drawable/ic_web"
-        custom:showAsAction="ifRoom|collapseActionView"
-        android:title="@string/visit_website_label">
-    </item>
+        android:title="@string/visit_website_label"
+        custom:showAsAction="ifRoom|collapseActionView" />
+
     <item
         android:id="@+id/share_item"
         android:menuCategory="container"
-        android:title="@string/share_label_with_ellipses">
-    </item>
+        android:title="@string/share_label_with_ellipses" />
 
     <item
         android:id="@+id/open_podcast"
-        custom:showAsAction="collapseActionView"
-        android:title="@string/open_podcast">
-    </item>
+        android:title="@string/open_podcast"
+        custom:showAsAction="collapseActionView" />
 
 </menu>

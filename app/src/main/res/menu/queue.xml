@@ -1,19 +1,20 @@
 <?xml version="1.0" encoding="utf-8"?>
-<menu xmlns:android="http://schemas.android.com/apk/res/android"
-      xmlns:custom="http://schemas.android.com/apk/res-auto">
+<menu
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:custom="http://schemas.android.com/apk/res-auto">
 
     <item
         android:id="@+id/action_search"
         android:icon="@drawable/ic_search"
-        custom:showAsAction="ifRoom"
-        android:title="@string/search_label"/>
+        android:title="@string/search_label"
+        custom:showAsAction="ifRoom" />
 
     <item
         android:id="@+id/refresh_item"
         android:title="@string/refresh_label"
         android:menuCategory="container"
-        custom:showAsAction="always"
-        android:icon="@drawable/ic_refresh"/>
+        android:icon="@drawable/ic_refresh"
+        custom:showAsAction="always" />
 
     <item
         android:id="@+id/queue_lock"
@@ -26,18 +27,23 @@
         android:title="@string/sort">
 
         <menu>
+
             <item
                 android:id="@+id/queue_sort_date"
                 android:title="@string/date">
 
                 <menu>
+
                     <item
                         android:id="@+id/queue_sort_date_asc"
-                        android:title="@string/sort_old_new"/>
+                        android:title="@string/sort_old_new" />
+
                     <item
                         android:id="@+id/queue_sort_date_desc"
-                        android:title="@string/sort_new_old"/>
+                        android:title="@string/sort_new_old" />
+
                 </menu>
+
             </item>
 
             <item
@@ -45,13 +51,17 @@
                 android:title="@string/duration">
 
                 <menu>
+
                     <item
                         android:id="@+id/queue_sort_duration_asc"
-                        android:title="@string/sort_short_long"/>
+                        android:title="@string/sort_short_long" />
+
                     <item
                         android:id="@+id/queue_sort_duration_desc"
-                        android:title="@string/sort_long_short"/>
+                        android:title="@string/sort_long_short" />
+
                 </menu>
+
             </item>
 
             <item
@@ -59,13 +69,17 @@
                 android:title="@string/episode_title">
 
                 <menu>
+
                     <item
                         android:id="@+id/queue_sort_episode_title_asc"
-                        android:title="@string/sort_a_z"/>
+                        android:title="@string/sort_a_z" />
+
                     <item
                         android:id="@+id/queue_sort_episode_title_desc"
-                        android:title="@string/sort_z_a"/>
+                        android:title="@string/sort_z_a" />
+
                 </menu>
+
             </item>
 
             <item
@@ -73,44 +87,54 @@
                 android:title="@string/feed_title">
 
                 <menu>
+
                     <item
                         android:id="@+id/queue_sort_feed_title_asc"
-                        android:title="@string/sort_a_z"/>
+                        android:title="@string/sort_a_z" />
+
                     <item
                         android:id="@+id/queue_sort_feed_title_desc"
-                        android:title="@string/sort_z_a"/>
+                        android:title="@string/sort_z_a" />
+
                 </menu>
+
             </item>
 
             <item
                 android:id="@+id/queue_sort_random"
-                android:title="@string/random">
-            </item>
+                android:title="@string/random" />
 
             <item
                 android:id="@+id/queue_sort_smart_shuffle"
                 android:title="@string/smart_shuffle">
 
                 <menu>
+
                     <item
                         android:id="@+id/queue_sort_smart_shuffle_asc"
-                        android:title="@string/sort_old_new"/>
+                        android:title="@string/sort_old_new" />
+
                     <item
                         android:id="@+id/queue_sort_smart_shuffle_desc"
-                        android:title="@string/sort_new_old"/>
+                        android:title="@string/sort_new_old" />
+
                 </menu>
+
             </item>
 
             <item
                 android:id="@+id/queue_keep_sorted"
                 android:title="@string/keep_sorted"
                 android:checkable="true" />
+
         </menu>
+
     </item>
 
     <item
         android:id="@+id/clear_queue"
         android:title="@string/clear_queue_label"
-        custom:showAsAction="collapseActionView"
-        android:icon="@drawable/ic_check"/>
+        android:icon="@drawable/ic_check"
+        custom:showAsAction="collapseActionView" />
+
 </menu>

@@ -1,40 +1,50 @@
 <?xml version="1.0" encoding="utf-8"?>
 <PreferenceScreen
-        xmlns:android="http://schemas.android.com/apk/res/android"
-        xmlns:search="http://schemas.android.com/apk/com.bytehamster.lib.preferencesearch">
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:search="http://schemas.android.com/apk/com.bytehamster.lib.preferencesearch">
 
     <PreferenceCategory android:title="@string/database">
+
         <Preference
-                android:key="prefDatabaseExport"
-                search:keywords="@string/import_export_search_keywords"
-                android:title="@string/database_export_label"
-                android:summary="@string/database_export_summary"/>
+            android:key="prefDatabaseExport"
+            android:summary="@string/database_export_summary"
+            android:title="@string/database_export_label"
+            search:keywords="@string/import_export_search_keywords" />
+
         <Preference
-                android:key="prefDatabaseImport"
-                search:keywords="@string/import_export_search_keywords"
-                android:title="@string/database_import_label"
-                android:summary="@string/database_import_summary"/>
+            android:key="prefDatabaseImport"
+            android:summary="@string/database_import_summary"
+            android:title="@string/database_import_label"
+            search:keywords="@string/import_export_search_keywords" />
+
     </PreferenceCategory>
 
     <PreferenceCategory android:title="@string/opml">
+
         <Preference
-                android:key="prefOpmlExport"
-                android:title="@string/opml_export_label"
-                android:summary="@string/opml_export_summary"/>
+            android:key="prefOpmlExport"
+            android:summary="@string/opml_export_summary"
+            android:title="@string/opml_export_label" />
+
         <Preference
-                android:key="prefOpmlImport"
-                android:title="@string/opml_import_label"
-                android:summary="@string/opml_import_summary"/>
+            android:key="prefOpmlImport"
+            android:summary="@string/opml_import_summary"
+            android:title="@string/opml_import_label" />
+
     </PreferenceCategory>
 
     <PreferenceCategory android:title="@string/html">
+
         <Preference
-                android:key="prefHtmlExport"
-                android:title="@string/html_export_label"
-                android:summary="@string/html_export_summary"/>
+            android:key="prefHtmlExport"
+            android:summary="@string/html_export_summary"
+            android:title="@string/html_export_label" />
+
         <Preference
-                android:key="prefFavoritesExport"
-                android:title="@string/favorites_export_label"
-                android:summary="@string/favorites_export_summary"/>
+            android:key="prefFavoritesExport"
+            android:summary="@string/favorites_export_summary"
+            android:title="@string/favorites_export_label" />
+
     </PreferenceCategory>
+
 </PreferenceScreen>

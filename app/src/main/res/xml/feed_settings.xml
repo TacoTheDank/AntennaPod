@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android"
+<PreferenceScreen
+    xmlns:android="http://schemas.android.com/apk/res/android"
     android:key="feedSettingsScreen">
 
     <SwitchPreferenceCompat
@@ -60,12 +61,16 @@
     <PreferenceCategory
         android:key="autoDownloadCategory"
         android:title="@string/auto_download_settings_label">
+
         <SwitchPreferenceCompat
             android:key="autoDownload"
             android:title="@string/auto_download_label" />
+
         <Preference
             android:key="episodeFilter"
             android:summary="@string/episode_filters_description"
             android:title="@string/episode_filters_label" />
+
     </PreferenceCategory>
+
 </PreferenceScreen>

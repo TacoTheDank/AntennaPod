@@ -1,34 +1,39 @@
 <?xml version="1.0" encoding="utf-8"?>
 <PreferenceScreen
-        xmlns:android="http://schemas.android.com/apk/res/android"
-        xmlns:search="http://schemas.android.com/apk/com.bytehamster.lib.preferencesearch">
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:search="http://schemas.android.com/apk/com.bytehamster.lib.preferencesearch">
 
     <de.danoeh.antennapod.preferences.MasterSwitchPreference
-            android:key="prefEnableAutoDl"
-            android:title="@string/pref_automatic_download_title"
-            search:summary="@string/pref_automatic_download_sum"
-            android:defaultValue="false"/>
+        android:defaultValue="false"
+        android:key="prefEnableAutoDl"
+        android:title="@string/pref_automatic_download_title"
+        search:summary="@string/pref_automatic_download_sum" />
+
     <ListPreference
-            android:defaultValue="25"
-            android:entries="@array/episode_cache_size_entries"
-            android:key="prefEpisodeCacheSize"
-            android:title="@string/pref_episode_cache_title"
-            android:summary="@string/pref_episode_cache_summary"
-            android:entryValues="@array/episode_cache_size_values"/>
+        android:defaultValue="25"
+        android:entries="@array/episode_cache_size_entries"
+        android:entryValues="@array/episode_cache_size_values"
+        android:key="prefEpisodeCacheSize"
+        android:summary="@string/pref_episode_cache_summary"
+        android:title="@string/pref_episode_cache_title" />
+
     <ListPreference
-            android:defaultValue="-1"
-            android:entries="@array/episode_cleanup_entries"
-            android:key="prefEpisodeCleanup"
-            android:title="@string/pref_episode_cleanup_title"
-            android:summary="@string/pref_episode_cleanup_summary"
-            android:entryValues="@array/episode_cleanup_values"/>
+        android:defaultValue="-1"
+        android:entries="@array/episode_cleanup_entries"
+        android:entryValues="@array/episode_cleanup_values"
+        android:key="prefEpisodeCleanup"
+        android:summary="@string/pref_episode_cleanup_summary"
+        android:title="@string/pref_episode_cleanup_title" />
+
     <SwitchPreferenceCompat
-            android:key="prefEnableAutoDownloadOnBattery"
-            android:title="@string/pref_automatic_download_on_battery_title"
-            android:summary="@string/pref_automatic_download_on_battery_sum"
-            android:defaultValue="true"/>
+        android:defaultValue="true"
+        android:key="prefEnableAutoDownloadOnBattery"
+        android:summary="@string/pref_automatic_download_on_battery_sum"
+        android:title="@string/pref_automatic_download_on_battery_title" />
+
     <SwitchPreferenceCompat
-            android:key="prefEnableAutoDownloadWifiFilter"
-            android:title="@string/pref_autodl_wifi_filter_title"
-            android:summary="@string/pref_autodl_wifi_filter_sum"/>
+        android:key="prefEnableAutoDownloadWifiFilter"
+        android:summary="@string/pref_autodl_wifi_filter_sum"
+        android:title="@string/pref_autodl_wifi_filter_title" />
+
 </PreferenceScreen>
