@@ -1,8 +1,11 @@
-<manifest xmlns:android="http://schemas.android.com/apk/res/android"
-          xmlns:tools="http://schemas.android.com/tools" package="de.danoeh.antennapod.core">
+<manifest
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    package="de.danoeh.antennapod.core">
 
     <uses-permission android:name="android.permission.INTERNET" />
-    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"
+    <uses-permission
+        android:name="android.permission.WRITE_EXTERNAL_STORAGE"
         tools:ignore="ScopedStorage" />
     <uses-permission android:name="android.permission.WAKE_LOCK" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
@@ -20,14 +23,15 @@
             android:name=".service.download.DownloadService"
             android:enabled="true" />
 
-        <service android:name=".service.playback.PlaybackService"
-            android:label="@string/app_name"
+        <service
+            android:name=".service.playback.PlaybackService"
             android:enabled="true"
             android:exported="true"
+            android:label="@string/app_name"
             tools:ignore="ExportedService">
 
             <intent-filter>
-                <action android:name="android.media.browse.MediaBrowserService"/>
+                <action android:name="android.media.browse.MediaBrowserService" />
             </intent-filter>
         </service>
 
@@ -42,15 +46,16 @@
             </intent-filter>
         </receiver>
 
-        <receiver android:name=".receiver.FeedUpdateReceiver"
-            android:label="@string/feed_update_receiver_name"
+        <receiver
+            android:name=".receiver.FeedUpdateReceiver"
             android:exported="true"
+            android:label="@string/feed_update_receiver_name"
             tools:ignore="ExportedReceiver" /> <!-- allow feeds update to be triggered by external apps -->
 
         <service
             android:name=".widget.WidgetUpdaterJobService"
-            android:permission="android.permission.BIND_JOB_SERVICE"
-            android:exported="true"/>
+            android:exported="true"
+            android:permission="android.permission.BIND_JOB_SERVICE" />
     </application>
 
     <queries>
