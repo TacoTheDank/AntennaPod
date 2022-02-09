@@ -1,17 +1,17 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout
-        xmlns:android="http://schemas.android.com/apk/res/android"
-        xmlns:tools="http://schemas.android.com/tools"
-        android:orientation="vertical"
-        android:layout_width="match_parent"
-        android:layout_height="@dimen/listitem_iconwithtext_height"
-        android:foreground="?attr/selectableItemBackground" >
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="@dimen/listitem_iconwithtext_height"
+    android:orientation="vertical"
+    android:foreground="?attr/selectableItemBackground">
 
     <ImageView
         android:id="@+id/imgvCover"
-        android:importantForAccessibility="no"
         android:layout_width="@dimen/thumbnail_length_navlist"
         android:layout_height="@dimen/thumbnail_length_navlist"
+        android:importantForAccessibility="no"
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true"
         android:layout_centerVertical="true"
@@ -22,19 +22,18 @@
         android:layout_marginStart="@dimen/listitem_icon_leftpadding"
         android:layout_marginTop="4dp"
         android:layout_marginBottom="4dp"
-        tools:src="@drawable/ic_download_black"/>
-
+        tools:src="@drawable/ic_download_black" />
 
     <TextView
         android:id="@+id/txtvTitle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
         android:lines="1"
         android:ellipsize="end"
         android:singleLine="true"
         android:layout_centerVertical="true"
         android:textColor="?android:attr/textColorPrimary"
         android:textSize="@dimen/text_size_navdrawer"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
         android:layout_marginLeft="@dimen/listitem_iconwithtext_textleftpadding"
         android:layout_marginStart="@dimen/listitem_iconwithtext_textleftpadding"
         android:layout_marginRight="48dp"
@@ -61,7 +60,7 @@
         android:layout_centerVertical="true"
         android:visibility="gone"
         tools:text="!"
-        tools:background="@android:color/holo_green_dark"/>
+        tools:background="@android:color/holo_green_dark" />
 
     <TextView
         android:id="@+id/txtvCount"
@@ -79,4 +78,5 @@
         android:layout_alignParentEnd="true"
         android:layout_centerVertical="true"
         tools:text="23" />
+
 </RelativeLayout>

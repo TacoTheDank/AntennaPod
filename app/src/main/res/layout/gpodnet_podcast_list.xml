@@ -52,4 +52,5 @@
         android:visibility="gone"
         tools:visibility="visible"
         tools:background="@android:color/holo_red_light" />
+
 </RelativeLayout>

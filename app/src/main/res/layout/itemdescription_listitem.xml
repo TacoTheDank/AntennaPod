@@ -1,5 +1,4 @@
 <?xml version="1.0" encoding="utf-8"?>
-
 <RelativeLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
@@ -13,7 +12,6 @@
 
     <TextView
         android:id="@+id/txtvPubDate"
-        style="@android:style/TextAppearance.Small"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentRight="true"
@@ -25,6 +23,7 @@
         android:textColor="?android:textColorSecondary"
         android:ellipsize="end"
         android:lines="1"
+        style="@android:style/TextAppearance.Small"
         tools:text="22 Jan 2016"
         tools:background="@android:color/holo_green_dark" />
 
@@ -58,12 +57,12 @@
 
     <Button
         android:id="@+id/butPreview"
-        android:layout_below="@id/txtvDescription"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_below="@id/txtvDescription"
         android:layout_alignParentStart="true"
         android:layout_alignParentLeft="true"
-        style="@style/Widget.MaterialComponents.Button.TextButton"
-        android:text="@string/preview_episode"/>
+        android:text="@string/preview_episode"
+        style="@style/Widget.MaterialComponents.Button.TextButton" />
 
 </RelativeLayout>
