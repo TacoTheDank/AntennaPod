@@ -1,13 +1,13 @@
 package de.danoeh.antennapod.fragment.preferences;
 
 import android.app.Activity;
-import android.app.ProgressDialog;
 import android.content.ActivityNotFoundException;
 import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.LayoutInflater;
 
 import androidx.activity.result.ActivityResult;
 import androidx.activity.result.ActivityResultLauncher;
@@ -32,6 +32,7 @@ import de.danoeh.antennapod.core.export.favorites.FavoritesWriter;
 import de.danoeh.antennapod.core.export.html.HtmlWriter;
 import de.danoeh.antennapod.core.export.opml.OpmlWriter;
 import de.danoeh.antennapod.core.storage.DatabaseExporter;
+import de.danoeh.antennapod.databinding.ProgressDialogBinding;
 import io.reactivex.Completable;
 import io.reactivex.Observable;
 import io.reactivex.android.schedulers.AndroidSchedulers;
@@ -70,15 +71,18 @@ public class ImportExportPreferencesFragment extends PreferenceFragmentCompat {
     private final ActivityResultLauncher<String> chooseOpmlImportPathLauncher =
             registerForActivityResult(new GetContent(), this::chooseOpmlImportPathResult);
     private Disposable disposable;
-    private ProgressDialog progressDialog;
+    private AlertDialog progressDialog;
 
     @Override
     public void onCreatePreferences(Bundle savedInstanceState, String rootKey) {
         addPreferencesFromResource(R.xml.preferences_import_export);
         setupStorageScreen();
-        progressDialog = new ProgressDialog(getContext());
-        progressDialog.setIndeterminate(true);
-        progressDialog.setMessage(getContext().getString(R.string.please_wait));
+        final ProgressDialogBinding progressBinding =
+                ProgressDialogBinding.inflate(LayoutInflater.from(getContext()));
+        progressBinding.dialogProgressText.setText(R.string.please_wait);
+        progressDialog = new AlertDialog.Builder(getContext())
+                .setView(progressBinding.getRoot())
+                .show();
     }
 
     @Override

@@ -1,15 +1,18 @@
 package de.danoeh.antennapod.dialog;
 
-import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.util.Log;
+import android.view.LayoutInflater;
+
+import androidx.appcompat.app.AlertDialog;
 
 import java.util.Collections;
 import java.util.List;
 
 import de.danoeh.antennapod.R;
 import de.danoeh.antennapod.core.dialog.ConfirmationDialog;
+import de.danoeh.antennapod.databinding.ProgressDialogBinding;
 import de.danoeh.antennapod.model.feed.Feed;
 import de.danoeh.antennapod.core.storage.DBWriter;
 import io.reactivex.Completable;
@@ -36,11 +39,13 @@ public class RemoveFeedDialog {
             public void onConfirmButtonPressed(DialogInterface clickedDialog) {
                 clickedDialog.dismiss();
 
-                ProgressDialog progressDialog = new ProgressDialog(context);
-                progressDialog.setMessage(context.getString(R.string.feed_remover_msg));
-                progressDialog.setIndeterminate(true);
-                progressDialog.setCancelable(false);
-                progressDialog.show();
+                final ProgressDialogBinding progressBinding =
+                        ProgressDialogBinding.inflate(LayoutInflater.from(context));
+                progressBinding.dialogProgressText.setText(R.string.feed_remover_msg);
+                final AlertDialog progressDialog = new AlertDialog.Builder(context)
+                        .setView(progressBinding.getRoot())
+                        .setCancelable(false)
+                        .show();
 
                 Completable.fromAction(() -> {
                     for (Feed feed : feeds) {
