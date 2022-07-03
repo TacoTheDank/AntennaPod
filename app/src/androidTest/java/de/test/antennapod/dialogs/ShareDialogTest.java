@@ -1,9 +1,9 @@
 package de.test.antennapod.dialogs;
 
 import android.content.Context;
-import android.content.Intent;
 import android.view.View;
-import androidx.test.espresso.intent.rule.IntentsTestRule;
+import androidx.test.core.app.ActivityScenario;
+import androidx.test.espresso.intent.Intents;
 import androidx.test.ext.junit.runners.AndroidJUnit4;
 import androidx.test.platform.app.InstrumentationRegistry;
 import de.danoeh.antennapod.R;
@@ -13,8 +13,8 @@ import de.test.antennapod.EspressoTestUtils;
 import de.test.antennapod.ui.UITestUtils;
 import org.hamcrest.Matcher;
 import org.hamcrest.Matchers;
+import org.junit.After;
 import org.junit.Before;
-import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
@@ -38,9 +38,6 @@ import static org.hamcrest.CoreMatchers.allOf;
 @RunWith(AndroidJUnit4.class)
 public class ShareDialogTest {
 
-    @Rule
-    public IntentsTestRule<MainActivity> activityRule = new IntentsTestRule<>(MainActivity.class, false, false);
-
     protected Context context;
 
     @Before
@@ -53,7 +50,8 @@ public class ShareDialogTest {
         uiTestUtils.setup();
         uiTestUtils.addLocalFeedData(true);
 
-        activityRule.launchActivity(new Intent());
+        ActivityScenario.launch(MainActivity.class);
+        Intents.init();
 
         openNavDrawer();
         onDrawerItem(withText(R.string.episodes_label)).perform(click());
@@ -65,6 +63,11 @@ public class ShareDialogTest {
         onView(isRoot()).perform(waitForView(allEpisodesMatcher, 1000));
         onView(allEpisodesMatcher).perform(actionOnItemAtPosition(0, click()));
         onView(first(EspressoTestUtils.actionBarOverflow())).perform(click());
+    }
+
+    @After
+    public void tearDown() throws Exception {
+        Intents.release();
     }
 
     @Test

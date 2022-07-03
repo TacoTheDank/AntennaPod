@@ -1,14 +1,13 @@
 package de.test.antennapod.playback;
 
 import android.content.Context;
-import android.content.Intent;
 import android.content.SharedPreferences;
 import androidx.preference.PreferenceManager;
 import android.view.View;
 
+import androidx.test.core.app.ActivityScenario;
 import androidx.test.filters.LargeTest;
 import androidx.test.platform.app.InstrumentationRegistry;
-import androidx.test.rule.ActivityTestRule;
 
 import de.danoeh.antennapod.model.feed.FeedItemFilter;
 import de.danoeh.antennapod.playback.base.PlayerStatus;
@@ -16,7 +15,6 @@ import org.awaitility.Awaitility;
 import org.hamcrest.Matcher;
 import org.junit.After;
 import org.junit.Before;
-import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.Parameterized;
@@ -70,8 +68,6 @@ import static org.junit.Assert.assertTrue;
 @IgnoreOnCi
 @RunWith(Parameterized.class)
 public class PlaybackTest {
-    @Rule
-    public ActivityTestRule<MainActivity> activityTestRule = new ActivityTestRule<>(MainActivity.class, false, false);
 
     @Parameterized.Parameter(value = 0)
     public String playerToUse;
@@ -99,7 +95,6 @@ public class PlaybackTest {
 
     @After
     public void tearDown() throws Exception {
-        activityTestRule.finishActivity();
         EspressoTestUtils.tryKillPlaybackService();
         uiTestUtils.tearDown();
         if (controller != null) {
@@ -107,8 +102,8 @@ public class PlaybackTest {
         }
     }
 
-    private void setupPlaybackController() {
-        controller = new PlaybackController(activityTestRule.getActivity()) {
+    private void setupPlaybackController(final MainActivity activity) {
+        controller = new PlaybackController(activity) {
             @Override
             public void loadMediaInfo() {
                 // Do nothing
@@ -121,28 +116,29 @@ public class PlaybackTest {
     public void testContinousPlaybackOffMultipleEpisodes() throws Exception {
         setContinuousPlaybackPreference(false);
         uiTestUtils.addLocalFeedData(true);
-        activityTestRule.launchActivity(new Intent());
-        setupPlaybackController();
-        playFromQueue(0);
-        Awaitility.await().atMost(5, TimeUnit.SECONDS)
-                .until(() -> controller.getStatus() == PlayerStatus.INITIALIZED);
+        try (ActivityScenario<MainActivity> scenario = ActivityScenario.launch(MainActivity.class)) {
+            scenario.onActivity(this::setupPlaybackController);
+            playFromQueue(0);
+            Awaitility.await().atMost(5, TimeUnit.SECONDS)
+                    .until(() -> controller.getStatus() == PlayerStatus.INITIALIZED);
+        }
     }
 
     @Test
     public void testContinuousPlaybackOnMultipleEpisodes() throws Exception {
         setContinuousPlaybackPreference(true);
         uiTestUtils.addLocalFeedData(true);
-        activityTestRule.launchActivity(new Intent());
+        try (ActivityScenario<MainActivity> ignored = ActivityScenario.launch(MainActivity.class)) {
+            List<FeedItem> queue = DBReader.getQueue();
+            final FeedItem first = queue.get(0);
+            final FeedItem second = queue.get(1);
 
-        List<FeedItem> queue = DBReader.getQueue();
-        final FeedItem first = queue.get(0);
-        final FeedItem second = queue.get(1);
-
-        playFromQueue(0);
-        Awaitility.await().atMost(2, TimeUnit.SECONDS).until(
-                () -> first.getMedia().getId() == PlaybackPreferences.getCurrentlyPlayingFeedMediaId());
-        Awaitility.await().atMost(6, TimeUnit.SECONDS).until(
-                () -> second.getMedia().getId() == PlaybackPreferences.getCurrentlyPlayingFeedMediaId());
+            playFromQueue(0);
+            Awaitility.await().atMost(2, TimeUnit.SECONDS).until(
+                    () -> first.getMedia().getId() == PlaybackPreferences.getCurrentlyPlayingFeedMediaId());
+            Awaitility.await().atMost(6, TimeUnit.SECONDS).until(
+                    () -> second.getMedia().getId() == PlaybackPreferences.getCurrentlyPlayingFeedMediaId());
+        }
     }
 
 
@@ -171,56 +167,60 @@ public class PlaybackTest {
         setSmartMarkAsPlayedPreference(60);
 
         uiTestUtils.addLocalFeedData(true);
-        activityTestRule.launchActivity(new Intent());
-        setupPlaybackController();
+        try (ActivityScenario<MainActivity> scenario = ActivityScenario.launch(MainActivity.class)) {
+            scenario.onActivity(this::setupPlaybackController);
 
-        final int fiIdx = 0;
-        final FeedItem feedItem = DBReader.getQueue().get(fiIdx);
+            final int fiIdx = 0;
+            final FeedItem feedItem = DBReader.getQueue().get(fiIdx);
 
-        playFromQueue(fiIdx);
+            playFromQueue(fiIdx);
 
-        // let playback run a bit then pause
-        Awaitility.await()
-                .atMost(1000, MILLISECONDS)
-                .until(() -> PlayerStatus.PLAYING == controller.getStatus());
-        pauseEpisode();
-        Awaitility.await()
-                .atMost(1000, MILLISECONDS)
-                .until(() -> PlayerStatus.PAUSED == controller.getStatus());
+            // let playback run a bit then pause
+            Awaitility.await()
+                    .atMost(1000, MILLISECONDS)
+                    .until(() -> PlayerStatus.PLAYING == controller.getStatus());
+            pauseEpisode();
+            Awaitility.await()
+                    .atMost(1000, MILLISECONDS)
+                    .until(() -> PlayerStatus.PAUSED == controller.getStatus());
 
-        assertThat("Ensure even with smart mark as play, after pause, the item remains in the queue.",
-                DBReader.getQueue(), hasItems(feedItem));
-        assertThat("Ensure even with smart mark as play, after pause, the item played status remains false.",
-                DBReader.getFeedItem(feedItem.getId()).isPlayed(), is(false));
+            assertThat("Ensure even with smart mark as play, after pause, the item remains in the queue.",
+                    DBReader.getQueue(), hasItems(feedItem));
+            assertThat("Ensure even with smart mark as play, after pause, the item played status remains false.",
+                    DBReader.getFeedItem(feedItem.getId()).isPlayed(), is(false));
+        }
     }
 
     @Test
     public void testStartLocal() throws Exception {
         uiTestUtils.addLocalFeedData(true);
-        activityTestRule.launchActivity(new Intent());
-        DBWriter.clearQueue().get();
-        startLocalPlayback();
+        try (ActivityScenario<MainActivity> ignored = ActivityScenario.launch(MainActivity.class)) {
+            DBWriter.clearQueue().get();
+            startLocalPlayback();
+        }
     }
 
     @Test
     public void testPlayingItemAddsToQueue() throws Exception {
         uiTestUtils.addLocalFeedData(true);
-        activityTestRule.launchActivity(new Intent());
-        DBWriter.clearQueue().get();
-        List<FeedItem> queue = DBReader.getQueue();
-        assertEquals(0, queue.size());
-        startLocalPlayback();
-        Awaitility.await().atMost(1, TimeUnit.SECONDS).until(
-                () -> 1 == DBReader.getQueue().size());
+        try (ActivityScenario<MainActivity> ignored = ActivityScenario.launch(MainActivity.class)) {
+            DBWriter.clearQueue().get();
+            List<FeedItem> queue = DBReader.getQueue();
+            assertEquals(0, queue.size());
+            startLocalPlayback();
+            Awaitility.await().atMost(1, TimeUnit.SECONDS).until(
+                    () -> 1 == DBReader.getQueue().size());
+        }
     }
 
     @Test
     public void testContinousPlaybackOffSingleEpisode() throws Exception {
         setContinuousPlaybackPreference(false);
         uiTestUtils.addLocalFeedData(true);
-        activityTestRule.launchActivity(new Intent());
-        DBWriter.clearQueue().get();
-        startLocalPlayback();
+        try (ActivityScenario<MainActivity> ignored = ActivityScenario.launch(MainActivity.class)) {
+            DBWriter.clearQueue().get();
+            startLocalPlayback();
+        }
     }
 
     protected void setContinuousPlaybackPreference(boolean value) {
@@ -288,21 +288,22 @@ public class PlaybackTest {
         setContinuousPlaybackPreference(followQueue);
         uiTestUtils.addLocalFeedData(true);
         DBWriter.clearQueue().get();
-        activityTestRule.launchActivity(new Intent());
-        final List<FeedItem> episodes = DBReader.getRecentlyPublishedEpisodes(0, 10, FeedItemFilter.unfiltered());
+        try (ActivityScenario<MainActivity> ignored = ActivityScenario.launch(MainActivity.class)) {
+            final List<FeedItem> episodes = DBReader.getRecentlyPublishedEpisodes(0, 10, FeedItemFilter.unfiltered());
 
-        startLocalPlayback();
-        FeedMedia media = episodes.get(0).getMedia();
-        Awaitility.await().atMost(1, TimeUnit.SECONDS).until(
-                () -> media.getId() == PlaybackPreferences.getCurrentlyPlayingFeedMediaId());
+            startLocalPlayback();
+            FeedMedia media = episodes.get(0).getMedia();
+            Awaitility.await().atMost(1, TimeUnit.SECONDS).until(
+                    () -> media.getId() == PlaybackPreferences.getCurrentlyPlayingFeedMediaId());
 
-        Awaitility.await().atMost(5, TimeUnit.SECONDS).until(
-                () -> media.getId() != PlaybackPreferences.getCurrentlyPlayingFeedMediaId());
+            Awaitility.await().atMost(5, TimeUnit.SECONDS).until(
+                    () -> media.getId() != PlaybackPreferences.getCurrentlyPlayingFeedMediaId());
 
-        startLocalPlayback();
+            startLocalPlayback();
 
-        Awaitility.await().atMost(1, TimeUnit.SECONDS).until(
-                () -> media.getId() == PlaybackPreferences.getCurrentlyPlayingFeedMediaId());
+            Awaitility.await().atMost(1, TimeUnit.SECONDS).until(
+                    () -> media.getId() == PlaybackPreferences.getCurrentlyPlayingFeedMediaId());
+        }
     }
 
     protected void doTestSmartMarkAsPlayed_Skip_ForEpisode(int itemIdxNegAllowed) throws Exception {
@@ -323,15 +324,16 @@ public class PlaybackTest {
         queue.removeIndex(fiIdx);
         assertFalse(queue.contains(feedItemId)); // Verify that episode is in queue only once
 
-        activityTestRule.launchActivity(new Intent());
-        playFromQueue(fiIdx);
+        try (ActivityScenario<MainActivity> ignored = ActivityScenario.launch(MainActivity.class)) {
+            playFromQueue(fiIdx);
 
-        skipEpisode();
+            skipEpisode();
 
-        //  assert item no longer in queue (needs to wait till skip is asynchronously processed)
-        Awaitility.await()
-                .atMost(5000, MILLISECONDS)
-                .until(() -> !DBReader.getQueueIDList().contains(feedItemId));
-        assertTrue(DBReader.getFeedItem(feedItemId).isPlayed());
+            //  assert item no longer in queue (needs to wait till skip is asynchronously processed)
+            Awaitility.await()
+                    .atMost(5000, MILLISECONDS)
+                    .until(() -> !DBReader.getQueueIDList().contains(feedItemId));
+            assertTrue(DBReader.getFeedItem(feedItemId).isPlayed());
+        }
     }
 }

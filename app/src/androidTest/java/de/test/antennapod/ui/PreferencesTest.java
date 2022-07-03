@@ -1,14 +1,13 @@
 package de.test.antennapod.ui;
 
-import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.res.Resources;
 
 import androidx.annotation.StringRes;
 import androidx.preference.PreferenceManager;
 import androidx.test.espresso.matcher.RootMatchers;
+import androidx.test.ext.junit.rules.ActivityScenarioRule;
 import androidx.test.filters.LargeTest;
-import androidx.test.rule.ActivityTestRule;
 
 import de.danoeh.antennapod.core.storage.EpisodeCleanupAlgorithmFactory;
 import org.awaitility.Awaitility;
@@ -62,22 +61,20 @@ public class PreferencesTest {
     private Resources res;
 
     @Rule
-    public ActivityTestRule<PreferenceActivity> activityTestRule =
-            new ActivityTestRule<>(PreferenceActivity.class,
-                    false,
-                    false);
-
+    public ActivityScenarioRule<PreferenceActivity> activityScenarioRule =
+            new ActivityScenarioRule<>(PreferenceActivity.class);
 
     @Before
     public void setUp() {
         EspressoTestUtils.clearDatabase();
         EspressoTestUtils.clearPreferences();
-        activityTestRule.launchActivity(new Intent());
-        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(activityTestRule.getActivity());
-        prefs.edit().putBoolean(UserPreferences.PREF_ENABLE_AUTODL, true).commit();
+        activityScenarioRule.getScenario().onActivity(activity -> {
+            SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(activity);
+            prefs.edit().putBoolean(UserPreferences.PREF_ENABLE_AUTODL, true).commit();
 
-        res = activityTestRule.getActivity().getResources();
-        UserPreferences.init(activityTestRule.getActivity());
+            res = activity.getResources();
+            UserPreferences.init(activity);
+        });
     }
 
     @Test

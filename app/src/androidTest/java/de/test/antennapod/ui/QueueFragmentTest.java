@@ -1,14 +1,15 @@
 package de.test.antennapod.ui;
 
-import android.content.Intent;
-import androidx.test.espresso.intent.rule.IntentsTestRule;
+import androidx.test.core.app.ActivityScenario;
+import androidx.test.espresso.intent.Intents;
 import androidx.test.ext.junit.runners.AndroidJUnit4;
 import de.danoeh.antennapod.R;
 import de.danoeh.antennapod.activity.MainActivity;
 import de.danoeh.antennapod.fragment.QueueFragment;
 import de.test.antennapod.EspressoTestUtils;
+
+import org.junit.After;
 import org.junit.Before;
-import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
@@ -26,15 +27,18 @@ import static org.hamcrest.CoreMatchers.endsWith;
 @RunWith(AndroidJUnit4.class)
 public class QueueFragmentTest {
 
-    @Rule
-    public IntentsTestRule<MainActivity> activityRule = new IntentsTestRule<>(MainActivity.class, false, false);
-
     @Before
     public void setUp() {
         EspressoTestUtils.clearPreferences();
         EspressoTestUtils.clearDatabase();
         EspressoTestUtils.setLastNavFragment(QueueFragment.TAG);
-        activityRule.launchActivity(new Intent());
+        ActivityScenario.launch(MainActivity.class);
+        Intents.init();
+    }
+
+    @After
+    public void tearDown() throws Exception {
+        Intents.release();
     }
 
     @Test

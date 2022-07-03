@@ -1,10 +1,10 @@
 package de.test.antennapod.ui;
 
 import android.app.Activity;
-import android.content.Intent;
 
 import androidx.test.espresso.Espresso;
-import androidx.test.espresso.intent.rule.IntentsTestRule;
+import androidx.test.espresso.intent.Intents;
+import androidx.test.ext.junit.rules.ActivityScenarioRule;
 import androidx.test.ext.junit.runners.AndroidJUnit4;
 import androidx.test.platform.app.InstrumentationRegistry;
 
@@ -51,24 +51,26 @@ public class MainActivityTest {
     private UITestUtils uiTestUtils;
 
     @Rule
-    public IntentsTestRule<MainActivity> activityRule = new IntentsTestRule<>(MainActivity.class, false, false);
+    public ActivityScenarioRule<MainActivity> activityRule = new ActivityScenarioRule<>(MainActivity.class);
 
     @Before
     public void setUp() throws IOException {
         EspressoTestUtils.clearPreferences();
         EspressoTestUtils.clearDatabase();
 
-        activityRule.launchActivity(new Intent());
+        activityRule.getScenario().onActivity(activity ->
+                solo = new Solo(InstrumentationRegistry.getInstrumentation(), activity)
+        );
+        Intents.init();
 
         uiTestUtils = new UITestUtils(InstrumentationRegistry.getInstrumentation().getTargetContext());
         uiTestUtils.setup();
-
-        solo = new Solo(InstrumentationRegistry.getInstrumentation(), activityRule.getActivity());
     }
 
     @After
     public void tearDown() throws Exception {
         uiTestUtils.tearDown();
+        Intents.release();
         PodDBAdapter.deleteDatabase();
     }
 
@@ -109,7 +111,7 @@ public class MainActivityTest {
         onView(allOf(withId(R.id.toolbar), isDisplayed())).check(
                 matches(hasDescendant(withText(R.string.subscriptions_label))));
         solo.goBack();
-        assertThat(activityRule.getActivityResult(), hasResultCode(Activity.RESULT_CANCELED));
+        assertThat(activityRule.getScenario().getResult(), hasResultCode(Activity.RESULT_CANCELED));
     }
 
     @Test
@@ -136,7 +138,7 @@ public class MainActivityTest {
         solo.goBack();
         solo.goBack();
         solo.goBack();
-        assertThat(activityRule.getActivityResult(), hasResultCode(Activity.RESULT_CANCELED));
+        assertThat(activityRule.getScenario().getResult(), hasResultCode(Activity.RESULT_CANCELED));
     }
 
     @Test
@@ -151,7 +153,7 @@ public class MainActivityTest {
         solo.goBack();
         onView(withText(R.string.yes)).perform(click());
         Thread.sleep(100);
-        assertThat(activityRule.getActivityResult(), hasResultCode(Activity.RESULT_CANCELED));
+        assertThat(activityRule.getScenario().getResult(), hasResultCode(Activity.RESULT_CANCELED));
     }
 
     @Test
@@ -164,6 +166,6 @@ public class MainActivityTest {
         solo.goBackToActivity(MainActivity.class.getSimpleName());
         solo.goBack();
         solo.goBack();
-        assertThat(activityRule.getActivityResult(), hasResultCode(Activity.RESULT_CANCELED));
+        assertThat(activityRule.getScenario().getResult(), hasResultCode(Activity.RESULT_CANCELED));
     }
 }

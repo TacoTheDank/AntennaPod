@@ -1,7 +1,8 @@
 package de.test.antennapod.ui;
 
 import android.content.Intent;
-import androidx.test.espresso.intent.rule.IntentsTestRule;
+import androidx.test.core.app.ActivityScenario;
+import androidx.test.espresso.intent.Intents;
 import androidx.test.platform.app.InstrumentationRegistry;
 import androidx.test.ext.junit.runners.AndroidJUnit4;
 import de.danoeh.antennapod.R;
@@ -10,7 +11,6 @@ import de.danoeh.antennapod.model.feed.Feed;
 import de.test.antennapod.EspressoTestUtils;
 import org.junit.After;
 import org.junit.Before;
-import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
@@ -30,9 +30,6 @@ public class FeedSettingsTest {
     private UITestUtils uiTestUtils;
     private Feed feed;
 
-    @Rule
-    public IntentsTestRule<MainActivity> activityRule = new IntentsTestRule<>(MainActivity.class, false, false);
-
     @Before
     public void setUp() throws Exception {
         uiTestUtils = new UITestUtils(InstrumentationRegistry.getInstrumentation().getTargetContext());
@@ -45,12 +42,14 @@ public class FeedSettingsTest {
         feed = uiTestUtils.hostedFeeds.get(0);
         Intent intent = new Intent(InstrumentationRegistry.getInstrumentation().getTargetContext(), MainActivity.class);
         intent.putExtra(MainActivity.EXTRA_FEED_ID, feed.getId());
-        activityRule.launchActivity(intent);
+        ActivityScenario.launch(intent);
+        Intents.init();
     }
 
     @After
     public void tearDown() throws Exception {
         uiTestUtils.tearDown();
+        Intents.release();
     }
 
     @Test
