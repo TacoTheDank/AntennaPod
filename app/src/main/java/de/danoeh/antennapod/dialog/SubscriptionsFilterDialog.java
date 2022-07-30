@@ -4,7 +4,6 @@ import android.content.Context;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
-import android.widget.LinearLayout;
 import android.widget.RadioButton;
 
 import androidx.appcompat.app.AlertDialog;
@@ -16,6 +15,8 @@ import java.util.HashSet;
 import java.util.Set;
 
 import de.danoeh.antennapod.R;
+import de.danoeh.antennapod.databinding.FilterDialogBinding;
+import de.danoeh.antennapod.databinding.FilterDialogRowBinding;
 import de.danoeh.antennapod.event.UnreadItemsUpdateEvent;
 import de.danoeh.antennapod.model.feed.SubscriptionsFilter;
 import de.danoeh.antennapod.core.feed.SubscriptionsFilterGroup;
@@ -29,39 +30,36 @@ public class SubscriptionsFilterDialog {
         AlertDialog.Builder builder = new AlertDialog.Builder(context);
         builder.setTitle(context.getString(R.string.pref_filter_feed_title));
 
-        LayoutInflater inflater = LayoutInflater.from(context);
-        View layout = inflater.inflate(R.layout.filter_dialog, null, false);
-        LinearLayout rows = layout.findViewById(R.id.filter_rows);
-        builder.setView(layout);
+        final FilterDialogBinding binding = FilterDialogBinding.inflate(LayoutInflater.from(context));
+        builder.setView(binding.getRoot());
 
         for (SubscriptionsFilterGroup item : SubscriptionsFilterGroup.values()) {
-            RecursiveRadioGroup row = (RecursiveRadioGroup) inflater.inflate(R.layout.filter_dialog_row, null);
-            RadioButton filter1 = row.findViewById(R.id.filter_dialog_radioButton1);
-            RadioButton filter2 = row.findViewById(R.id.filter_dialog_radioButton2);
-            filter1.setText(item.values[0].displayName);
-            filter1.setTag(item.values[0].filterId);
+            final FilterDialogRowBinding rowBinding =
+                    FilterDialogRowBinding.inflate(LayoutInflater.from(context));
+            rowBinding.filterDialogRadioButton1.setText(item.values[0].displayName);
+            rowBinding.filterDialogRadioButton1.setTag(item.values[0].filterId);
             if (item.values.length == 2) {
-                filter2.setText(item.values[1].displayName);
-                filter2.setTag(item.values[1].filterId);
+                rowBinding.filterDialogRadioButton2.setText(item.values[1].displayName);
+                rowBinding.filterDialogRadioButton2.setTag(item.values[1].filterId);
             } else {
-                filter2.setVisibility(View.GONE);
+                rowBinding.filterDialogRadioButton2.setVisibility(View.GONE);
             }
-            rows.addView(row);
+            binding.filterRows.addView(rowBinding.getRoot());
         }
 
         for (String filterId : filterValues) {
             if (!TextUtils.isEmpty(filterId)) {
-                ((RadioButton) layout.findViewWithTag(filterId)).setChecked(true);
+                ((RadioButton) binding.getRoot().findViewWithTag(filterId)).setChecked(true);
             }
         }
 
         builder.setPositiveButton(R.string.confirm_label, (dialog, which) -> {
             filterValues.clear();
-            for (int i = 0; i < rows.getChildCount(); i++) {
-                if (!(rows.getChildAt(i) instanceof RecursiveRadioGroup)) {
+            for (int i = 0; i < binding.filterRows.getChildCount(); i++) {
+                if (!(binding.filterRows.getChildAt(i) instanceof RecursiveRadioGroup)) {
                     continue;
                 }
-                RecursiveRadioGroup group = (RecursiveRadioGroup) rows.getChildAt(i);
+                RecursiveRadioGroup group = (RecursiveRadioGroup) binding.filterRows.getChildAt(i);
                 if (group.getCheckedButton() != null) {
                     String tag = (String) group.getCheckedButton().getTag();
                     if (tag != null) { // Clear buttons use no tag

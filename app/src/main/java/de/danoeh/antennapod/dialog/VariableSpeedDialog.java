@@ -14,11 +14,11 @@ import com.google.android.material.bottomsheet.BottomSheetDialogFragment;
 import com.google.android.material.chip.Chip;
 import com.google.android.material.snackbar.Snackbar;
 import de.danoeh.antennapod.R;
+import de.danoeh.antennapod.databinding.SpeedSelectDialogBinding;
 import de.danoeh.antennapod.event.playback.SpeedChangedEvent;
 import de.danoeh.antennapod.core.preferences.UserPreferences;
 import de.danoeh.antennapod.core.util.playback.PlaybackController;
 import de.danoeh.antennapod.view.ItemOffsetDecoration;
-import de.danoeh.antennapod.view.PlaybackSpeedSeekBar;
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
@@ -35,8 +35,7 @@ public class VariableSpeedDialog extends BottomSheetDialogFragment {
     private final DecimalFormat speedFormat;
     private PlaybackController controller;
     private final List<Float> selectedSpeeds;
-    private PlaybackSpeedSeekBar speedSeekBar;
-    private Chip addCurrentSpeedChip;
+    private SpeedSelectDialogBinding binding;
 
     public VariableSpeedDialog() {
         DecimalFormatSymbols format = new DecimalFormatSymbols(Locale.US);
@@ -68,40 +67,37 @@ public class VariableSpeedDialog extends BottomSheetDialogFragment {
 
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void updateSpeed(SpeedChangedEvent event) {
-        speedSeekBar.updateSpeed(event.getNewSpeed());
-        addCurrentSpeedChip.setText(speedFormat.format(event.getNewSpeed()));
+        binding.speedSeekBar.updateSpeed(event.getNewSpeed());
+        binding.addCurrentSpeedChip.setText(speedFormat.format(event.getNewSpeed()));
     }
 
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
                              @Nullable Bundle savedInstanceState) {
-        View root = View.inflate(getContext(), R.layout.speed_select_dialog, null);
-        speedSeekBar = root.findViewById(R.id.speed_seek_bar);
-        speedSeekBar.setProgressChangedListener(multiplier -> {
+        binding = SpeedSelectDialogBinding.inflate(inflater);
+        binding.speedSeekBar.setProgressChangedListener(multiplier -> {
             if (controller != null) {
                 controller.setPlaybackSpeed(multiplier);
             }
         });
-        RecyclerView selectedSpeedsGrid = root.findViewById(R.id.selected_speeds_grid);
-        selectedSpeedsGrid.setLayoutManager(new GridLayoutManager(getContext(), 3));
-        selectedSpeedsGrid.addItemDecoration(new ItemOffsetDecoration(getContext(), 4));
+        binding.selectedSpeedsGrid.setLayoutManager(new GridLayoutManager(getContext(), 3));
+        binding.selectedSpeedsGrid.addItemDecoration(new ItemOffsetDecoration(getContext(), 4));
         adapter = new SpeedSelectionAdapter();
         adapter.setHasStableIds(true);
-        selectedSpeedsGrid.setAdapter(adapter);
+        binding.selectedSpeedsGrid.setAdapter(adapter);
 
-        addCurrentSpeedChip = root.findViewById(R.id.add_current_speed_chip);
-        addCurrentSpeedChip.setCloseIconVisible(true);
-        addCurrentSpeedChip.setCloseIconResource(R.drawable.ic_add);
-        addCurrentSpeedChip.setOnCloseIconClickListener(v -> addCurrentSpeed());
-        addCurrentSpeedChip.setOnClickListener(v -> addCurrentSpeed());
-        return root;
+        binding.addCurrentSpeedChip.setCloseIconVisible(true);
+        binding.addCurrentSpeedChip.setCloseIconResource(R.drawable.ic_add);
+        binding.addCurrentSpeedChip.setOnCloseIconClickListener(v -> addCurrentSpeed());
+        binding.addCurrentSpeedChip.setOnClickListener(v -> addCurrentSpeed());
+        return binding.getRoot();
     }
 
     private void addCurrentSpeed() {
         float newSpeed = controller.getCurrentPlaybackSpeedMultiplier();
         if (selectedSpeeds.contains(newSpeed)) {
-            Snackbar.make(addCurrentSpeedChip,
+            Snackbar.make(binding.addCurrentSpeedChip,
                     getString(R.string.preset_already_exists, newSpeed), Snackbar.LENGTH_LONG).show();
         } else {
             selectedSpeeds.add(newSpeed);

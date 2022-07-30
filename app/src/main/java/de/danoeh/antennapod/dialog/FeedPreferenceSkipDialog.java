@@ -1,10 +1,10 @@
 package de.danoeh.antennapod.dialog;
 
 import android.content.Context;
-import android.view.View;
-import android.widget.EditText;
+import android.view.LayoutInflater;
 import androidx.appcompat.app.AlertDialog;
 import de.danoeh.antennapod.R;
+import de.danoeh.antennapod.databinding.FeedPrefSkipDialogBinding;
 
 /**
  * Displays a dialog with a username and password text field and an optional checkbox to save username and preferences.
@@ -15,28 +15,25 @@ public abstract class FeedPreferenceSkipDialog extends AlertDialog.Builder {
                                     int skipEndInitialValue) {
         super(context);
         setTitle(R.string.pref_feed_skip);
-        View rootView = View.inflate(context, R.layout.feed_pref_skip_dialog, null);
-        setView(rootView);
+        final FeedPrefSkipDialogBinding binding =
+                FeedPrefSkipDialogBinding.inflate(LayoutInflater.from(context));
+        setView(binding.getRoot());
 
-        final EditText etxtSkipIntro = rootView.findViewById(R.id.etxtSkipIntro);
-        final EditText etxtSkipEnd = rootView.findViewById(R.id.etxtSkipEnd);
-
-        etxtSkipIntro.setText(String.valueOf(skipIntroInitialValue));
-        etxtSkipEnd.setText(String.valueOf(skipEndInitialValue));
+        binding.etxtSkipIntro.setText(String.valueOf(skipIntroInitialValue));
+        binding.etxtSkipEnd.setText(String.valueOf(skipEndInitialValue));
 
         setNegativeButton(R.string.cancel_label, null);
-        setPositiveButton(R.string.confirm_label, (dialog, which)
-                -> {
+        setPositiveButton(R.string.confirm_label, (dialog, which) -> {
             int skipIntro;
             int skipEnding;
             try {
-                skipIntro = Integer.parseInt(etxtSkipIntro.getText().toString());
+                skipIntro = Integer.parseInt(binding.etxtSkipIntro.getText().toString());
             } catch (NumberFormatException e) {
                 skipIntro = 0;
             }
 
             try {
-                skipEnding = Integer.parseInt(etxtSkipEnd.getText().toString());
+                skipEnding = Integer.parseInt(binding.etxtSkipEnd.getText().toString());
             } catch (NumberFormatException e) {
                 skipEnding = 0;
             }
@@ -44,5 +41,5 @@ public abstract class FeedPreferenceSkipDialog extends AlertDialog.Builder {
         });
     }
 
-    protected abstract void onConfirmed(int skipIntro, int skipEndig);
+    protected abstract void onConfirmed(int skipIntro, int skipEnding);
 }

@@ -6,7 +6,7 @@ import java.lang.ref.WeakReference;
 import java.util.ArrayList;
 import java.util.List;
 
-import android.view.View;
+import android.view.LayoutInflater;
 import androidx.appcompat.app.AlertDialog;
 import de.danoeh.antennapod.R;
 import de.danoeh.antennapod.core.storage.NavDrawerData;
@@ -36,14 +36,13 @@ public class RenameItemDialog {
         if (activity == null) {
             return;
         }
-
-        View content = View.inflate(activity, R.layout.edit_text_dialog, null);
-        EditTextDialogBinding alertViewBinding = EditTextDialogBinding.bind(content);
+        final EditTextDialogBinding alertViewBinding =
+                EditTextDialogBinding.inflate(LayoutInflater.from(activity));
         String title = feed != null ? feed.getTitle() : drawerItem.getTitle();
 
         alertViewBinding.urlEditText.setText(title);
         AlertDialog dialog = new AlertDialog.Builder(activity)
-                .setView(content)
+                .setView(alertViewBinding.getRoot())
                 .setTitle(feed != null ? R.string.rename_feed_label : R.string.rename_tag_label)
                 .setPositiveButton(android.R.string.ok, (d, input) -> {
                     String newTitle = alertViewBinding.urlEditText.getText().toString();

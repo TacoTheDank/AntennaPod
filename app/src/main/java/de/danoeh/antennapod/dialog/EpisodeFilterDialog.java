@@ -1,14 +1,12 @@
 package de.danoeh.antennapod.dialog;
 
 import android.content.Context;
-import android.view.View;
-import android.widget.CheckBox;
-import android.widget.EditText;
-import android.widget.RadioButton;
+import android.view.LayoutInflater;
 
 import androidx.appcompat.app.AlertDialog;
 
 import de.danoeh.antennapod.R;
+import de.danoeh.antennapod.databinding.EpisodeFilterDialogBinding;
 import de.danoeh.antennapod.model.feed.FeedFilter;
 
 /**
@@ -22,30 +20,26 @@ public abstract class EpisodeFilterDialog extends AlertDialog.Builder {
         super(context);
         initialFilter = filter;
         setTitle(R.string.episode_filters_label);
-        View rootView = View.inflate(context, R.layout.episode_filter_dialog, null);
-        setView(rootView);
-
-        final EditText etxtEpisodeFilterText = rootView.findViewById(R.id.etxtEpisodeFilterText);
-        final EditText etxtEpisodeFilterDurationText = rootView.findViewById(R.id.etxtEpisodeFilterDurationText);
-        final RadioButton radioInclude = rootView.findViewById(R.id.radio_filter_include);
-        final RadioButton radioExclude = rootView.findViewById(R.id.radio_filter_exclude);
-        final CheckBox checkboxDuration = rootView.findViewById(R.id.checkbox_filter_duration);
+        final EpisodeFilterDialogBinding binding =
+                EpisodeFilterDialogBinding.inflate(LayoutInflater.from(context));
+        setView(binding.getRoot());
 
         if (initialFilter.includeOnly()) {
-            radioInclude.setChecked(true);
-            etxtEpisodeFilterText.setText(initialFilter.getIncludeFilter());
-        } else if(initialFilter.excludeOnly()) {
-            radioExclude.setChecked(true);
-            etxtEpisodeFilterText.setText(initialFilter.getExcludeFilter());
+            binding.radioFilterInclude.setChecked(true);
+            binding.etxtEpisodeFilterText.setText(initialFilter.getIncludeFilter());
+        } else if (initialFilter.excludeOnly()) {
+            binding.radioFilterExclude.setChecked(true);
+            binding.etxtEpisodeFilterText.setText(initialFilter.getExcludeFilter());
         } else {
-            radioExclude.setChecked(false);
-            radioInclude.setChecked(false);
-            etxtEpisodeFilterText.setText("");
+            binding.radioFilterExclude.setChecked(false);
+            binding.radioFilterInclude.setChecked(false);
+            binding.etxtEpisodeFilterText.setText("");
         }
         if (initialFilter.hasMinimalDurationFilter()) {
-            checkboxDuration.setChecked(true);
+            binding.checkboxFilterDuration.setChecked(true);
             // Store minimal duration in seconds, show in minutes
-            etxtEpisodeFilterDurationText.setText(String.valueOf(initialFilter.getMinimalDurationFilter() / 60));
+            binding.etxtEpisodeFilterDurationText.setText(
+                    String.valueOf(initialFilter.getMinimalDurationFilter() / 60));
         }
 
         setNegativeButton(R.string.cancel_label, null);
@@ -53,15 +47,16 @@ public abstract class EpisodeFilterDialog extends AlertDialog.Builder {
                     String includeString = "";
                     String excludeString = "";
                     int minimalDuration = -1;
-                    if (radioInclude.isChecked()) {
-                        includeString = etxtEpisodeFilterText.getText().toString();
+                    if (binding.radioFilterInclude.isChecked()) {
+                        includeString = binding.etxtEpisodeFilterText.getText().toString();
                     } else {
-                        excludeString = etxtEpisodeFilterText.getText().toString();
+                        excludeString = binding.etxtEpisodeFilterText.getText().toString();
                     }
-                    if (checkboxDuration.isChecked()) {
+                    if (binding.checkboxFilterDuration.isChecked()) {
                         try {
                             // Store minimal duration in seconds
-                            minimalDuration = Integer.parseInt(etxtEpisodeFilterDurationText.getText().toString()) * 60;
+                            minimalDuration = Integer.parseInt(
+                                    binding.etxtEpisodeFilterDurationText.getText().toString()) * 60;
                         } catch (NumberFormatException e) {
                             // Do not change anything on error
                         }
