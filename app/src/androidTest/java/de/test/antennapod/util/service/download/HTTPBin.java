@@ -41,9 +41,6 @@ import de.danoeh.antennapod.BuildConfig;
 public class HTTPBin extends NanoHTTPD {
     private static final String TAG = "HTTPBin";
 
-    private static final String MIME_HTML = "text/html";
-    private static final String MIME_PLAIN = "text/plain";
-
     private final List<File> servedFiles;
 
     public HTTPBin() {
@@ -101,7 +98,7 @@ public class HTTPBin extends NanoHTTPD {
         if (func.equalsIgnoreCase("status")) {
             try {
                 int code = Integer.parseInt(param);
-                return new Response(getStatus(code), MIME_HTML, "");
+                return newFixedLengthResponse(getStatus(code), NanoHTTPD.MIME_HTML, "");
             } catch (NumberFormatException e) {
                 e.printStackTrace();
                 return getInternalError();
@@ -128,10 +125,7 @@ public class HTTPBin extends NanoHTTPD {
 
                 Thread.sleep(sec * 1000L);
                 return getOKResponse();
-            } catch (NumberFormatException e) {
-                e.printStackTrace();
-                return getInternalError();
-            } catch (InterruptedException e) {
+            } catch (NumberFormatException | InterruptedException e) {
                 e.printStackTrace();
                 return getInternalError();
             }
@@ -170,10 +164,7 @@ public class HTTPBin extends NanoHTTPD {
                 }
 
                 return getGzippedResponse(size);
-            } catch (NumberFormatException e) {
-                e.printStackTrace();
-                return getInternalError();
-            } catch (IOException e) {
+            } catch (NumberFormatException | IOException e) {
                 e.printStackTrace();
                 return getInternalError();
             }
@@ -230,10 +221,7 @@ public class HTTPBin extends NanoHTTPD {
                     IOUtils.skipFully(inputStream, start);
                     contentRange = "bytes " + start + (file.length() - 1) + "/" + file.length();
 
-                } catch (NumberFormatException e) {
-                    e.printStackTrace();
-                    return getInternalError();
-                } catch (IOException e) {
+                } catch (NumberFormatException | IOException e) {
                     e.printStackTrace();
                     return getInternalError();
                 }
@@ -255,7 +243,8 @@ public class HTTPBin extends NanoHTTPD {
             }
         }
 
-        Response response = new Response(status, URLConnection.guessContentTypeFromName(file.getAbsolutePath()), inputStream);
+        Response response = newChunkedResponse(status,
+                URLConnection.guessContentTypeFromName(file.getAbsolutePath()), inputStream);
 
         response.addHeader("Accept-Ranges", "bytes");
         if (contentRange != null) {
@@ -281,7 +270,7 @@ public class HTTPBin extends NanoHTTPD {
         gzipOutputStream.close();
 
         InputStream inputStream = new ByteArrayInputStream(compressed.toByteArray());
-        Response response = new Response(Response.Status.OK, MIME_PLAIN, inputStream);
+        Response response = newChunkedResponse(Response.Status.OK, NanoHTTPD.MIME_PLAINTEXT, inputStream);
         response.addHeader("Content-Encoding", "gzip");
         response.addHeader("Content-Length", String.valueOf(compressed.size()));
         return response;
@@ -330,7 +319,8 @@ public class HTTPBin extends NanoHTTPD {
 
     private Response getRedirectResponse(int times) {
         if (times > 0) {
-            Response response = new Response(Response.Status.REDIRECT, MIME_HTML, "This resource has been moved permanently");
+            Response response = newFixedLengthResponse(Response.Status.REDIRECT,
+                    NanoHTTPD.MIME_HTML, "This resource has been moved permanently");
             response.addHeader("Location", "/redirect/" + times);
             return response;
         } else if (times == 0) {
@@ -341,24 +331,27 @@ public class HTTPBin extends NanoHTTPD {
     }
 
     private Response getUnauthorizedResponse() {
-        Response response = new Response(Response.Status.UNAUTHORIZED, MIME_HTML, "");
+        Response response = newFixedLengthResponse(Response.Status.UNAUTHORIZED, NanoHTTPD.MIME_HTML, "");
         response.addHeader("WWW-Authenticate", "Basic realm=\"Test Realm\"");
         return response;
     }
 
     private Response getOKResponse() {
-        return new Response(Response.Status.OK, MIME_HTML, "");
+        return newFixedLengthResponse(Response.Status.OK, NanoHTTPD.MIME_HTML, "");
     }
 
     private Response getInternalError() {
-        return new Response(Response.Status.INTERNAL_ERROR, MIME_HTML, "The server encountered an internal error");
+        return newFixedLengthResponse(Response.Status.INTERNAL_ERROR,
+                NanoHTTPD.MIME_HTML, "The server encountered an internal error");
     }
 
     private Response getRangeNotSatisfiable() {
-        return new Response(Response.Status.RANGE_NOT_SATISFIABLE, MIME_PLAIN, "");
+        return newFixedLengthResponse(Response.Status.RANGE_NOT_SATISFIABLE,
+                NanoHTTPD.MIME_PLAINTEXT, "");
     }
 
     private Response get404Error() {
-        return new Response(Response.Status.NOT_FOUND, MIME_HTML, "The requested URL was not found on this server");
+        return newFixedLengthResponse(Response.Status.NOT_FOUND,
+                NanoHTTPD.MIME_HTML, "The requested URL was not found on this server");
     }
 }

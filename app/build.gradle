@@ -131,7 +131,7 @@ dependencies {
     compileOnly "com.google.android.wearable:wearable:$wearableSupportVersion"
 
     androidTestImplementation "org.awaitility:awaitility:$awaitilityVersion"
-    androidTestImplementation 'com.nanohttpd:nanohttpd:2.1.1'
+    androidTestImplementation 'org.nanohttpd:nanohttpd:2.3.1'
     androidTestImplementation "androidx.test.espresso:espresso-core:$espressoVersion"
     androidTestImplementation "androidx.test.espresso:espresso-contrib:$espressoVersion"
     androidTestImplementation "androidx.test.espresso:espresso-intents:$espressoVersion"
