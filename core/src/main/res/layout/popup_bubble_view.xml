@@ -26,7 +26,7 @@
             android:layout_height="wrap_content"
             android:textColor="?attr/colorOnSecondary"
             android:text="@string/no"
-            style="@style/Widget.MaterialComponents.Button.TextButton" />
+            style="@style/Widget.Material3.Button.TextButton" />
 
         <Button
             android:id="@+id/balloon_button_positive"
@@ -34,7 +34,7 @@
             android:layout_height="wrap_content"
             android:textColor="?attr/colorOnSecondary"
             android:text="@string/yes"
-            style="@style/Widget.MaterialComponents.Button.TextButton" />
+            style="@style/Widget.Material3.Button.TextButton" />
 
     </LinearLayout>
 

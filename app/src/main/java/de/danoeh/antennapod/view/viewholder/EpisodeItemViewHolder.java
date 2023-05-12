@@ -11,9 +11,9 @@ import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
-import androidx.cardview.widget.CardView;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.google.android.material.card.MaterialCardView;
 import com.google.android.material.elevation.SurfaceColors;
 import com.joanzapata.iconify.Iconify;
 
@@ -62,7 +62,7 @@ public class EpisodeItemViewHolder extends RecyclerView.ViewHolder {
     private final CircularProgressBar secondaryActionProgress;
     private final TextView separatorIcons;
     private final View leftPadding;
-    public final CardView coverHolder;
+    public final MaterialCardView coverHolder;
 
     private final MainActivity activity;
     private FeedItem item;

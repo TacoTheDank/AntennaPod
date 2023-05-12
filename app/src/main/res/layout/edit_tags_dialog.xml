@@ -35,7 +35,7 @@
         app:endIconMode="custom"
         app:endIconDrawable="@drawable/ic_add"
         app:endIconContentDescription="@string/add_tag"
-        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox">
+        style="@style/Widget.Material3.TextInputLayout.OutlinedBox">
 
         <AutoCompleteTextView
             android:id="@+id/newTagEditText"

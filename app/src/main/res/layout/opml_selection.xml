@@ -14,7 +14,7 @@
         android:layout_alignParentEnd="true"
         android:layout_margin="8dp"
         android:text="@string/confirm_label"
-        style="@style/Widget.MaterialComponents.Button.TextButton" />
+        style="@style/Widget.Material3.Button.TextButton" />
 
     <Button
         android:id="@+id/butCancel"
@@ -25,7 +25,7 @@
         android:layout_toStartOf="@+id/butConfirm"
         android:layout_margin="8dp"
         android:text="@string/cancel_label"
-        style="@style/Widget.MaterialComponents.Button.TextButton" />
+        style="@style/Widget.Material3.Button.TextButton" />
 
     <ListView
         android:id="@+id/feedlist"

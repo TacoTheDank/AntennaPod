@@ -13,7 +13,7 @@
         android:layout_margin="20dp"
         android:hint="@string/select_country"
         app:endIconMode="none"
-        style="@style/Widget.MaterialComponents.TextInputLayout.FilledBox.ExposedDropdownMenu">
+        style="@style/Widget.Material3.TextInputLayout.FilledBox.ExposedDropdownMenu">
 
         <AutoCompleteTextView
             android:layout_width="match_parent"

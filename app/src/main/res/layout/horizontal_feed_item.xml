@@ -10,7 +10,7 @@
     android:clipToOutline="false"
     android:clipChildren="false">
 
-    <androidx.cardview.widget.CardView
+    <com.google.android.material.card.MaterialCardView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         app:cardBackgroundColor="@color/non_square_icon_background"
@@ -28,6 +28,6 @@
             android:background="?android:attr/windowBackground"
             squareImageView:direction="height" />
 
-    </androidx.cardview.widget.CardView>
+    </com.google.android.material.card.MaterialCardView>
 
 </LinearLayout>

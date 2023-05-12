@@ -13,7 +13,7 @@
 
     <TextView
         android:id="@+id/txtvPubDate"
-        style="@android:style/TextAppearance.Small"
+        style="@style/TextAppearance.Material3.TitleSmall"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentRight="true"
@@ -63,7 +63,7 @@
         android:layout_height="wrap_content"
         android:layout_alignParentStart="true"
         android:layout_alignParentLeft="true"
-        style="@style/Widget.MaterialComponents.Button.TextButton"
+        style="@style/Widget.Material3.Button.TextButton"
         android:text="@string/preview_episode"/>
 
 </RelativeLayout>

@@ -71,7 +71,7 @@
                 android:text="@string/statistics_filter_past_year"
                 android:layout_weight="1"
                 android:layout_marginEnd="4dp"
-                style="@style/Widget.MaterialComponents.Button.OutlinedButton" />
+                style="@style/Widget.Material3.Button.OutlinedButton" />
 
             <Button
                 android:id="@+id/allTimeButton"
@@ -80,7 +80,7 @@
                 android:text="@string/statistics_filter_all_time"
                 android:layout_weight="1"
                 android:layout_marginStart="4dp"
-                style="@style/Widget.MaterialComponents.Button.OutlinedButton" />
+                style="@style/Widget.Material3.Button.OutlinedButton" />
 
         </LinearLayout>
 

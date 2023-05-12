@@ -7,7 +7,7 @@
     android:layout_height="match_parent"
     android:orientation="vertical">
 
-    <androidx.cardview.widget.CardView
+    <com.google.android.material.card.MaterialCardView
         android:id="@+id/card"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
@@ -43,7 +43,7 @@
                 android:layout_below="@id/divider"
                 android:paddingBottom="88dp" />
 
-            <Button
+            <com.google.android.material.button.MaterialButton
                 android:id="@+id/shortcutBtn"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -53,6 +53,6 @@
 
         </RelativeLayout>
 
-    </androidx.cardview.widget.CardView>
+    </com.google.android.material.card.MaterialCardView>
 
 </LinearLayout>

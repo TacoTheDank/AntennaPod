@@ -40,7 +40,7 @@
                 android:layout_height="wrap_content"
                 android:ellipsize="end"
                 android:maxLines="1"
-                style="@style/Base.TextAppearance.AppCompat.Body1"
+                style="@style/TextAppearance.Material3.BodyMedium"
                 tools:text="Episode title that is too long and will cause the text to wrap" />
 
             <TextView
@@ -50,7 +50,7 @@
                 android:textColor="?android:attr/textColorSecondary"
                 android:ellipsize="end"
                 android:maxLines="1"
-                style="@style/TextAppearance.AppCompat.Body1"
+                style="@style/TextAppearance.Material3.BodySmall"
                 tools:text="Episode author that is too long and will cause the text to wrap" />
 
         </LinearLayout>

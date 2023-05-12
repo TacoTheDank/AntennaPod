@@ -47,7 +47,7 @@
             app:endIconMode="custom"
             app:endIconDrawable="@drawable/ic_add"
             app:endIconContentDescription="@string/add_term"
-            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox">
+            style="@style/Widget.Material3.TextInputLayout.OutlinedBox">
 
             <com.google.android.material.textfield.TextInputEditText
                 android:layout_width="match_parent"

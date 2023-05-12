@@ -20,10 +20,10 @@ import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.content.res.AppCompatResources;
-import androidx.cardview.widget.CardView;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.google.android.material.card.MaterialCardView;
 import com.google.android.material.elevation.SurfaceColors;
 import java.lang.ref.WeakReference;
 import java.text.NumberFormat;
@@ -215,7 +215,7 @@ public class SubscriptionsRecyclerAdapter extends SelectableAdapter<Subscription
         private final TextView fallbackTitle;
         private final FrameLayout selectView;
         private final CheckBox selectCheckbox;
-        private final CardView card;
+        private final MaterialCardView card;
 
         public SubscriptionViewHolder(@NonNull View itemView) {
             super(itemView);

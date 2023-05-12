@@ -81,7 +81,7 @@
             android:scaleType="fitXY"
             app:srcCompat="@drawable/ic_rounded_corner_right" />
 
-        <androidx.cardview.widget.CardView
+        <com.google.android.material.card.MaterialCardView
             android:id="@+id/coverHolder"
             android:layout_width="124dp"
             android:layout_height="124dp"
@@ -102,7 +102,7 @@
                 android:importantForAccessibility="no"
                 tools:src="@tools:sample/avatars" />
 
-        </androidx.cardview.widget.CardView>
+        </com.google.android.material.card.MaterialCardView>
 
         <LinearLayout
             android:layout_width="match_parent"

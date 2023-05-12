@@ -123,8 +123,7 @@
                     android:id="@+id/butAction1Text"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:textAppearance="@style/TextAppearance.AppCompat.Button"
-                    android:textColor="?android:attr/textColorPrimary"
+                    android:textColor="?attr/colorOnSurface"
                     tools:text="Button 1" />
 
             </LinearLayout>
@@ -166,8 +165,7 @@
                     android:id="@+id/butAction2Text"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:textAppearance="@style/TextAppearance.AppCompat.Button"
-                    android:textColor="?android:attr/textColorPrimary"
+                    android:textColor="?attr/colorOnSurface"
                     tools:text="Button 2" />
 
             </LinearLayout>

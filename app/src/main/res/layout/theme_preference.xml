@@ -9,7 +9,7 @@
     android:gravity="top"
     android:padding="8dp">
 
-    <androidx.cardview.widget.CardView
+    <com.google.android.material.card.MaterialCardView
         android:id="@+id/themeSystemCard"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
@@ -44,9 +44,9 @@
 
         </LinearLayout>
 
-    </androidx.cardview.widget.CardView>
+    </com.google.android.material.card.MaterialCardView>
 
-    <androidx.cardview.widget.CardView
+    <com.google.android.material.card.MaterialCardView
         android:id="@+id/themeLightCard"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
@@ -81,9 +81,9 @@
 
         </LinearLayout>
 
-    </androidx.cardview.widget.CardView>
+    </com.google.android.material.card.MaterialCardView>
 
-    <androidx.cardview.widget.CardView
+    <com.google.android.material.card.MaterialCardView
         android:id="@+id/themeDarkCard"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
@@ -118,6 +118,6 @@
 
         </LinearLayout>
 
-    </androidx.cardview.widget.CardView>
+    </com.google.android.material.card.MaterialCardView>
 
 </LinearLayout>

@@ -147,7 +147,7 @@
             android:layout_height="wrap_content"
             android:text="@string/auto_enable_change_times"
             android:layout_gravity="center"
-            style="@style/Widget.MaterialComponents.Button.TextButton" />
+            style="@style/Widget.Material3.Button.TextButton" />
 
     </LinearLayout>
 

@@ -2,9 +2,9 @@ package de.danoeh.antennapod.preferences;
 
 import android.content.Context;
 import android.util.AttributeSet;
-import androidx.cardview.widget.CardView;
 import androidx.preference.Preference;
 import androidx.preference.PreferenceViewHolder;
+import com.google.android.material.card.MaterialCardView;
 import com.google.android.material.elevation.SurfaceColors;
 import de.danoeh.antennapod.R;
 import de.danoeh.antennapod.databinding.ThemePreferenceBinding;
@@ -30,7 +30,7 @@ public class ThemePreference extends Preference {
         updateUi();
     }
 
-    void updateThemeCard(CardView card, UserPreferences.ThemePreference theme) {
+    void updateThemeCard(MaterialCardView card, UserPreferences.ThemePreference theme) {
         float density = getContext().getResources().getDisplayMetrics().density;
         int surfaceColor = SurfaceColors.getColorForElevation(getContext(), 1 * density);
         int surfaceColorActive = SurfaceColors.getColorForElevation(getContext(), 32 * density);

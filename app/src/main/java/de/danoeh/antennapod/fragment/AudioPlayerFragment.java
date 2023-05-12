@@ -16,13 +16,13 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import com.google.android.material.appbar.MaterialToolbar;
-import androidx.cardview.widget.CardView;
 import androidx.fragment.app.Fragment;
 import androidx.interpolator.view.animation.FastOutSlowInInterpolator;
 import androidx.viewpager2.adapter.FragmentStateAdapter;
 import androidx.viewpager2.widget.ViewPager2;
 
 import com.google.android.material.bottomsheet.BottomSheetBehavior;
+import com.google.android.material.card.MaterialCardView;
 import com.google.android.material.elevation.SurfaceColors;
 
 import de.danoeh.antennapod.core.receiver.MediaButtonReceiver;
@@ -93,7 +93,7 @@ public class AudioPlayerFragment extends Fragment implements
     private ImageButton butSkip;
     private MaterialToolbar toolbar;
     private ProgressBar progressIndicator;
-    private CardView cardViewSeek;
+    private MaterialCardView cardViewSeek;
     private TextView txtvSeek;
 
     private PlaybackController controller;

@@ -80,7 +80,7 @@
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintBottom_toBottomOf="@id/barrier"
         tools:text="@string/discover_more"
-        style="@style/Widget.MaterialComponents.Button.TextButton" />
+        style="@style/Widget.Material3.Button.TextButton" />
 
     <androidx.constraintlayout.widget.Barrier
         android:id="@+id/barrier"

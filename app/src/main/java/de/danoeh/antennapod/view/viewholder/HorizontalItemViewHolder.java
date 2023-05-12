@@ -6,8 +6,8 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
-import androidx.cardview.widget.CardView;
 import androidx.recyclerview.widget.RecyclerView;
+import com.google.android.material.card.MaterialCardView;
 import com.google.android.material.elevation.SurfaceColors;
 import de.danoeh.antennapod.R;
 import de.danoeh.antennapod.activity.MainActivity;
@@ -25,7 +25,7 @@ import de.danoeh.antennapod.ui.common.SquareImageView;
 import de.danoeh.antennapod.ui.common.ThemeUtils;
 
 public class HorizontalItemViewHolder extends RecyclerView.ViewHolder {
-    public final CardView card;
+    public final MaterialCardView card;
     public final ImageView secondaryActionIcon;
     private final SquareImageView cover;
     private final TextView title;
