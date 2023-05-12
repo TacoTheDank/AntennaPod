@@ -15,6 +15,8 @@ import com.bumptech.glide.load.resource.bitmap.FitCenter;
 import com.bumptech.glide.load.resource.bitmap.RoundedCorners;
 import com.bumptech.glide.request.RequestOptions;
 
+import org.apache.commons.lang3.StringUtils;
+
 import java.util.List;
 
 import de.danoeh.antennapod.R;
@@ -69,7 +71,7 @@ public class ItunesAdapter extends ArrayAdapter<PodcastSearchResult> {
 
         // Set the title
         viewHolder.titleView.setText(podcast.title);
-        if (podcast.author != null && ! podcast.author.trim().isEmpty()) {
+        if (StringUtils.isNotBlank(podcast.author)) {
             viewHolder.authorView.setText(podcast.author);
             viewHolder.authorView.setVisibility(View.VISIBLE);
         } else if (podcast.feedUrl != null && !podcast.feedUrl.contains("itunes.apple.com")) {

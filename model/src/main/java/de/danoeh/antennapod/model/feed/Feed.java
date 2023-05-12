@@ -4,6 +4,8 @@ import android.text.TextUtils;
 
 import androidx.annotation.Nullable;
 
+import org.apache.commons.lang3.StringUtils;
+
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -192,11 +194,11 @@ public class Feed extends FeedFile {
      * of the feed.
      */
     public String getIdentifyingValue() {
-        if (feedIdentifier != null && !feedIdentifier.isEmpty()) {
+        if (StringUtils.isNotEmpty(feedIdentifier)) {
             return feedIdentifier;
-        } else if (download_url != null && !download_url.isEmpty()) {
+        } else if (StringUtils.isNotEmpty(download_url)) {
             return download_url;
-        } else if (feedTitle != null && !feedTitle.isEmpty()) {
+        } else if (StringUtils.isNotEmpty(feedTitle)) {
             return feedTitle;
         } else {
             return link;

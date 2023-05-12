@@ -8,6 +8,7 @@ import de.danoeh.antennapod.model.feed.Feed;
 import de.danoeh.antennapod.model.feed.FeedMedia;
 import de.danoeh.antennapod.net.download.serviceinterface.DownloadRequest;
 import org.apache.commons.io.FilenameUtils;
+import org.apache.commons.lang3.StringUtils;
 
 import java.io.File;
 
@@ -83,7 +84,7 @@ public class DownloadRequestCreator {
 
     private static String getFeedfileName(Feed feed) {
         String filename = feed.getDownload_url();
-        if (feed.getTitle() != null && !feed.getTitle().isEmpty()) {
+        if (StringUtils.isNotEmpty(feed.getTitle())) {
             filename = feed.getTitle();
         }
         return "feed-" + FileNameGenerator.generateFileName(filename) + feed.getId();

@@ -3,6 +3,7 @@ package de.danoeh.antennapod.model.feed;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
+import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 
@@ -171,9 +172,9 @@ public class FeedItem extends FeedComponent implements Serializable {
      * of the entry.
      */
     public String getIdentifyingValue() {
-        if (itemIdentifier != null && !itemIdentifier.isEmpty()) {
+        if (StringUtils.isNotEmpty(itemIdentifier)) {
             return itemIdentifier;
-        } else if (title != null && !title.isEmpty()) {
+        } else if (StringUtils.isNotEmpty(title)) {
             return title;
         } else if (hasMedia() && media.getDownload_url() != null) {
             return media.getDownload_url();

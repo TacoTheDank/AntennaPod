@@ -34,6 +34,7 @@ import de.danoeh.antennapod.event.PlayerErrorEvent;
 import de.danoeh.antennapod.event.playback.SleepTimerUpdatedEvent;
 import de.danoeh.antennapod.event.playback.SpeedChangedEvent;
 import de.danoeh.antennapod.playback.cast.CastEnabledActivity;
+import org.apache.commons.lang3.ObjectUtils;
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
@@ -170,7 +171,7 @@ public class AudioPlayerFragment extends Fragment implements
 
         float[] dividerPos = null;
 
-        if (media.getChapters() != null && !media.getChapters().isEmpty()) {
+        if (ObjectUtils.isNotEmpty(media.getChapters())) {
             List<Chapter> chapters = media.getChapters();
             dividerPos = new float[chapters.size()];
 
@@ -360,7 +361,7 @@ public class AudioPlayerFragment extends Fragment implements
 
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void updatePosition(PlaybackPositionEvent event) {
-        if (controller == null || txtvPosition == null || txtvLength == null || sbPosition == null) {
+        if (ObjectUtils.anyNull(controller, txtvPosition, txtvLength, sbPosition)) {
             return;
         }
 

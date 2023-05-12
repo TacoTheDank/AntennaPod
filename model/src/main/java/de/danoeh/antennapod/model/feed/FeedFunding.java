@@ -1,5 +1,6 @@
 package de.danoeh.antennapod.model.feed;
 
+import org.apache.commons.lang3.ObjectUtils;
 import org.apache.commons.lang3.StringUtils;
 
 import java.util.ArrayList;
@@ -31,7 +32,7 @@ public class FeedFunding {
         }
 
         FeedFunding funding = (FeedFunding) obj;
-        if (url == null && funding.url == null && content == null && funding.content == null) {
+        if (ObjectUtils.allNull(url, funding.url, content, funding.content)) {
             return true;
         }
         if (url != null && url.equals(funding.url) && content != null && content.equals(funding.content)) {
@@ -68,7 +69,7 @@ public class FeedFunding {
             }
             String url = linkContent[0];
             String title = "";
-            if (linkContent.length > 1 && ! StringUtils.isBlank(linkContent[1])) {
+            if (linkContent.length > 1 && StringUtils.isNotBlank(linkContent[1])) {
                 title = linkContent[1];
             }
             funding.add(new FeedFunding(url, title));

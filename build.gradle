@@ -34,7 +34,7 @@ project.ext {
     googleMaterialVersion = "1.6.0"
 
     // Third-party
-    commonslangVersion = "3.6"
+    commonslangVersion = "3.12.0"
     commonsioVersion = "2.5"
     jsoupVersion = "1.15.1"
     glideVersion = "4.13.2"
