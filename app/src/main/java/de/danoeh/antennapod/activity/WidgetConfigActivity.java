@@ -7,31 +7,25 @@ import android.graphics.Color;
 import android.os.Build;
 import android.os.Bundle;
 import android.view.View;
-import android.widget.CheckBox;
 import android.widget.SeekBar;
-import android.widget.TextView;
 import androidx.appcompat.app.AppCompatActivity;
 import de.danoeh.antennapod.R;
 import de.danoeh.antennapod.core.preferences.ThemeSwitcher;
 import de.danoeh.antennapod.core.receiver.PlayerWidget;
 import de.danoeh.antennapod.core.widget.WidgetUpdaterWorker;
+import de.danoeh.antennapod.databinding.ActivityWidgetConfigBinding;
 
 public class WidgetConfigActivity extends AppCompatActivity {
     private int appWidgetId = AppWidgetManager.INVALID_APPWIDGET_ID;
 
-    private SeekBar opacitySeekBar;
-    private TextView opacityTextView;
-    private View widgetPreview;
-    private CheckBox ckPlaybackSpeed;
-    private CheckBox ckRewind;
-    private CheckBox ckFastForward;
-    private CheckBox ckSkip;
+    private ActivityWidgetConfigBinding viewBinding;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         setTheme(ThemeSwitcher.getTheme(this));
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_widget_config);
+        viewBinding = ActivityWidgetConfigBinding.inflate(getLayoutInflater());
+        setContentView(viewBinding.getRoot());
 
         Intent configIntent = getIntent();
         Bundle extras = configIntent.getExtras();
@@ -47,17 +41,15 @@ public class WidgetConfigActivity extends AppCompatActivity {
             finish();
         }
 
-        opacityTextView = findViewById(R.id.widget_opacity_textView);
-        opacitySeekBar = findViewById(R.id.widget_opacity_seekBar);
-        widgetPreview = findViewById(R.id.widgetLayout);
-        findViewById(R.id.butConfirm).setOnClickListener(v -> confirmCreateWidget());
-        opacitySeekBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
+        viewBinding.butConfirm.setOnClickListener(v -> confirmCreateWidget());
+        viewBinding.widgetOpacitySeekBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
 
             @Override
             public void onProgressChanged(SeekBar seekBar, int i, boolean b) {
-                opacityTextView.setText(seekBar.getProgress() + "%");
-                int color = getColorWithAlpha(PlayerWidget.DEFAULT_COLOR, opacitySeekBar.getProgress());
-                widgetPreview.setBackgroundColor(color);
+                viewBinding.widgetOpacityTextView.setText(seekBar.getProgress() + "%");
+                int color = getColorWithAlpha(
+                        PlayerWidget.DEFAULT_COLOR, viewBinding.widgetOpacitySeekBar.getProgress());
+                viewBinding.widgetConfigPreview.widgetLayout.setBackgroundColor(color);
             }
 
             @Override
@@ -70,65 +62,67 @@ public class WidgetConfigActivity extends AppCompatActivity {
 
         });
 
-        widgetPreview.findViewById(R.id.txtNoPlaying).setVisibility(View.GONE);
-        TextView title = widgetPreview.findViewById(R.id.txtvTitle);
-        title.setVisibility(View.VISIBLE);
-        title.setText(R.string.app_name);
-        TextView progress = widgetPreview.findViewById(R.id.txtvProgress);
-        progress.setVisibility(View.VISIBLE);
-        progress.setText(R.string.position_default_label);
+        viewBinding.widgetConfigPreview.txtNoPlaying.setVisibility(View.GONE);
+        viewBinding.widgetConfigPreview.txtvTitle.setVisibility(View.VISIBLE);
+        viewBinding.widgetConfigPreview.txtvTitle.setText(R.string.app_name);
+        viewBinding.widgetConfigPreview.txtvProgress.setVisibility(View.VISIBLE);
+        viewBinding.widgetConfigPreview.txtvProgress.setText(R.string.position_default_label);
 
-        ckPlaybackSpeed = findViewById(R.id.ckPlaybackSpeed);
-        ckPlaybackSpeed.setOnClickListener(v -> displayPreviewPanel());
-        ckRewind = findViewById(R.id.ckRewind);
-        ckRewind.setOnClickListener(v -> displayPreviewPanel());
-        ckFastForward = findViewById(R.id.ckFastForward);
-        ckFastForward.setOnClickListener(v -> displayPreviewPanel());
-        ckSkip = findViewById(R.id.ckSkip);
-        ckSkip.setOnClickListener(v -> displayPreviewPanel());
+        viewBinding.ckPlaybackSpeed.setOnClickListener(v -> displayPreviewPanel());
+        viewBinding.ckRewind.setOnClickListener(v -> displayPreviewPanel());
+        viewBinding.ckFastForward.setOnClickListener(v -> displayPreviewPanel());
+        viewBinding.ckSkip.setOnClickListener(v -> displayPreviewPanel());
 
         setInitialState();
     }
 
     private void setInitialState() {
         SharedPreferences prefs = getSharedPreferences(PlayerWidget.PREFS_NAME, MODE_PRIVATE);
-        ckPlaybackSpeed.setChecked(prefs.getBoolean(PlayerWidget.KEY_WIDGET_PLAYBACK_SPEED + appWidgetId, false));
-        ckRewind.setChecked(prefs.getBoolean(PlayerWidget.KEY_WIDGET_REWIND + appWidgetId, false));
-        ckFastForward.setChecked(prefs.getBoolean(PlayerWidget.KEY_WIDGET_FAST_FORWARD + appWidgetId, false));
-        ckSkip.setChecked(prefs.getBoolean(PlayerWidget.KEY_WIDGET_SKIP + appWidgetId, false));
+        viewBinding.ckPlaybackSpeed.setChecked(
+                prefs.getBoolean(PlayerWidget.KEY_WIDGET_PLAYBACK_SPEED + appWidgetId, false));
+        viewBinding.ckRewind.setChecked(
+                prefs.getBoolean(PlayerWidget.KEY_WIDGET_REWIND + appWidgetId, false));
+        viewBinding.ckFastForward.setChecked(
+                prefs.getBoolean(PlayerWidget.KEY_WIDGET_FAST_FORWARD + appWidgetId, false));
+        viewBinding.ckSkip.setChecked(
+                prefs.getBoolean(PlayerWidget.KEY_WIDGET_SKIP + appWidgetId, false));
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
             int color = prefs.getInt(PlayerWidget.KEY_WIDGET_COLOR + appWidgetId, 0);
             int opacity = Color.alpha(color) * 100 / 0xFF;
 
-            opacitySeekBar.setProgress(opacity, false);
+            viewBinding.widgetOpacitySeekBar.setProgress(opacity, false);
         }
         displayPreviewPanel();
     }
 
     private void displayPreviewPanel() {
-        boolean showExtendedPreview =
-                ckPlaybackSpeed.isChecked() || ckRewind.isChecked() || ckFastForward.isChecked() || ckSkip.isChecked();
-        widgetPreview.findViewById(R.id.extendedButtonsContainer)
+        boolean showExtendedPreview = viewBinding.ckPlaybackSpeed.isChecked() || viewBinding.ckRewind.isChecked()
+                || viewBinding.ckFastForward.isChecked() || viewBinding.ckSkip.isChecked();
+        viewBinding.widgetConfigPreview.extendedButtonsContainer
                 .setVisibility(showExtendedPreview ? View.VISIBLE : View.GONE);
-        widgetPreview.findViewById(R.id.butPlay).setVisibility(showExtendedPreview ? View.GONE : View.VISIBLE);
-        widgetPreview.findViewById(R.id.butPlaybackSpeed)
-                .setVisibility(ckPlaybackSpeed.isChecked() ? View.VISIBLE : View.GONE);
-        widgetPreview.findViewById(R.id.butFastForward)
-                .setVisibility(ckFastForward.isChecked() ? View.VISIBLE : View.GONE);
-        widgetPreview.findViewById(R.id.butSkip).setVisibility(ckSkip.isChecked() ? View.VISIBLE : View.GONE);
-        widgetPreview.findViewById(R.id.butRew).setVisibility(ckRewind.isChecked() ? View.VISIBLE : View.GONE);
+        viewBinding.widgetConfigPreview.butPlay.setVisibility(showExtendedPreview ? View.GONE : View.VISIBLE);
+        viewBinding.widgetConfigPreview.butPlaybackSpeed
+                .setVisibility(viewBinding.ckPlaybackSpeed.isChecked() ? View.VISIBLE : View.GONE);
+        viewBinding.widgetConfigPreview.butFastForward
+                .setVisibility(viewBinding.ckFastForward.isChecked() ? View.VISIBLE : View.GONE);
+        viewBinding.widgetConfigPreview.butSkip.setVisibility(
+                viewBinding.ckSkip.isChecked() ? View.VISIBLE : View.GONE);
+        viewBinding.widgetConfigPreview.butRew.setVisibility(
+                viewBinding.ckRewind.isChecked() ? View.VISIBLE : View.GONE);
     }
 
     private void confirmCreateWidget() {
-        int backgroundColor = getColorWithAlpha(PlayerWidget.DEFAULT_COLOR, opacitySeekBar.getProgress());
+        int backgroundColor = getColorWithAlpha(
+                PlayerWidget.DEFAULT_COLOR, viewBinding.widgetOpacitySeekBar.getProgress());
 
         SharedPreferences prefs = getSharedPreferences(PlayerWidget.PREFS_NAME, MODE_PRIVATE);
         SharedPreferences.Editor editor = prefs.edit();
         editor.putInt(PlayerWidget.KEY_WIDGET_COLOR + appWidgetId, backgroundColor);
-        editor.putBoolean(PlayerWidget.KEY_WIDGET_PLAYBACK_SPEED + appWidgetId, ckPlaybackSpeed.isChecked());
-        editor.putBoolean(PlayerWidget.KEY_WIDGET_SKIP + appWidgetId, ckSkip.isChecked());
-        editor.putBoolean(PlayerWidget.KEY_WIDGET_REWIND + appWidgetId, ckRewind.isChecked());
-        editor.putBoolean(PlayerWidget.KEY_WIDGET_FAST_FORWARD + appWidgetId, ckFastForward.isChecked());
+        editor.putBoolean(PlayerWidget.KEY_WIDGET_PLAYBACK_SPEED + appWidgetId,
+                viewBinding.ckPlaybackSpeed.isChecked());
+        editor.putBoolean(PlayerWidget.KEY_WIDGET_SKIP + appWidgetId, viewBinding.ckSkip.isChecked());
+        editor.putBoolean(PlayerWidget.KEY_WIDGET_REWIND + appWidgetId, viewBinding.ckRewind.isChecked());
+        editor.putBoolean(PlayerWidget.KEY_WIDGET_FAST_FORWARD + appWidgetId, viewBinding.ckFastForward.isChecked());
         editor.apply();
 
         Intent resultValue = new Intent();

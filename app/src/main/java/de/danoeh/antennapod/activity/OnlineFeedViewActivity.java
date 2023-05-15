@@ -37,6 +37,7 @@ import de.danoeh.antennapod.core.feed.FeedUrlNotFoundException;
 import de.danoeh.antennapod.core.storage.DBTasks;
 import de.danoeh.antennapod.core.service.playback.PlaybackServiceInterface;
 import de.danoeh.antennapod.core.util.DownloadErrorLabel;
+import de.danoeh.antennapod.databinding.OnlinefeedviewHeaderBinding;
 import de.danoeh.antennapod.event.EpisodeDownloadEvent;
 import de.danoeh.antennapod.event.FeedListUpdateEvent;
 import de.danoeh.antennapod.event.PlayerStatusEvent;
@@ -416,13 +417,11 @@ public class OnlineFeedViewActivity extends AppCompatActivity {
 
         viewBinding.backgroundImage.setColorFilter(new LightingColorFilter(0xff828282, 0x000000));
 
-        View header = View.inflate(this, R.layout.onlinefeedview_header, null);
-
-        viewBinding.listView.addHeaderView(header);
+        final OnlinefeedviewHeaderBinding headerBinding =
+                OnlinefeedviewHeaderBinding.inflate(getLayoutInflater());
+        viewBinding.listView.addHeaderView(headerBinding.getRoot());
         viewBinding.listView.setSelector(android.R.color.transparent);
         viewBinding.listView.setAdapter(new FeedItemlistDescriptionAdapter(this, 0, feed.getItems()));
-
-        TextView description = header.findViewById(R.id.txtvDescription);
 
         if (StringUtils.isNotBlank(feed.getImageUrl())) {
             Glide.with(this)
@@ -445,7 +444,7 @@ public class OnlineFeedViewActivity extends AppCompatActivity {
 
         viewBinding.titleLabel.setText(feed.getTitle());
         viewBinding.authorLabel.setText(feed.getAuthor());
-        description.setText(HtmlToPlainText.getPlainText(feed.getDescription()));
+        headerBinding.txtvDescription.setText(HtmlToPlainText.getPlainText(feed.getDescription()));
 
         viewBinding.subscribeButton.setOnClickListener(v -> {
             if (feedInFeedlist()) {
@@ -468,12 +467,12 @@ public class OnlineFeedViewActivity extends AppCompatActivity {
         }
 
         final int MAX_LINES_COLLAPSED = 10;
-        description.setMaxLines(MAX_LINES_COLLAPSED);
-        description.setOnClickListener(v -> {
-            if (description.getMaxLines() > MAX_LINES_COLLAPSED) {
-                description.setMaxLines(MAX_LINES_COLLAPSED);
+        headerBinding.txtvDescription.setMaxLines(MAX_LINES_COLLAPSED);
+        headerBinding.txtvDescription.setOnClickListener(v -> {
+            if (headerBinding.txtvDescription.getMaxLines() > MAX_LINES_COLLAPSED) {
+                headerBinding.txtvDescription.setMaxLines(MAX_LINES_COLLAPSED);
             } else {
-                description.setMaxLines(2000);
+                headerBinding.txtvDescription.setMaxLines(2000);
             }
         });
 
