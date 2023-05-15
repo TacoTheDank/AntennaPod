@@ -10,10 +10,7 @@ import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
-import android.widget.ImageView;
-import android.widget.ProgressBar;
-import android.widget.TextView;
+import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import com.bumptech.glide.Glide;
@@ -37,6 +34,8 @@ import de.danoeh.antennapod.adapter.actionbutton.PlayActionButton;
 import de.danoeh.antennapod.adapter.actionbutton.PlayLocalActionButton;
 import de.danoeh.antennapod.adapter.actionbutton.StreamActionButton;
 import de.danoeh.antennapod.adapter.actionbutton.VisitWebsiteActionButton;
+import de.danoeh.antennapod.core.databinding.PopupBubbleViewBinding;
+import de.danoeh.antennapod.databinding.FeeditemFragmentBinding;
 import de.danoeh.antennapod.event.EpisodeDownloadEvent;
 import de.danoeh.antennapod.core.util.PlaybackStatus;
 import de.danoeh.antennapod.event.FeedItemEvent;
@@ -51,11 +50,9 @@ import de.danoeh.antennapod.storage.preferences.UserPreferences;
 import de.danoeh.antennapod.core.storage.DBReader;
 import de.danoeh.antennapod.core.util.Converter;
 import de.danoeh.antennapod.core.util.DateFormatter;
-import de.danoeh.antennapod.ui.common.CircularProgressBar;
 import de.danoeh.antennapod.ui.common.ThemeUtils;
 import de.danoeh.antennapod.core.util.playback.PlaybackController;
 import de.danoeh.antennapod.core.util.gui.ShownotesCleaner;
-import de.danoeh.antennapod.view.ShownotesWebView;
 import io.reactivex.Observable;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.Disposable;
@@ -94,27 +91,13 @@ public class ItemFragment extends Fragment {
     private FeedItem item;
     private String webviewData;
 
-    private ViewGroup root;
-    private ShownotesWebView webvDescription;
-    private TextView txtvPodcast;
-    private TextView txtvTitle;
-    private TextView txtvDuration;
-    private TextView txtvPublished;
-    private ImageView imgvCover;
-    private CircularProgressBar progbarDownload;
-    private ProgressBar progbarLoading;
-    private TextView butAction1Text;
-    private TextView butAction2Text;
-    private ImageView butAction1Icon;
-    private ImageView butAction2Icon;
-    private View butAction1;
-    private View butAction2;
     private ItemActionButton actionButton1;
     private ItemActionButton actionButton2;
-    private View noMediaLabel;
 
     private Disposable disposable;
     private PlaybackController controller;
+
+    private FeeditemFragmentBinding binding;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -124,23 +107,17 @@ public class ItemFragment extends Fragment {
     }
 
     @Override
-    public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+    public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
+                             @Nullable Bundle savedInstanceState) {
         super.onCreateView(inflater, container, savedInstanceState);
-        View layout = inflater.inflate(R.layout.feeditem_fragment, container, false);
+        binding = FeeditemFragmentBinding.inflate(inflater);
 
-        root = layout.findViewById(R.id.content_root);
-
-        txtvPodcast = layout.findViewById(R.id.txtvPodcast);
-        txtvPodcast.setOnClickListener(v -> openPodcast());
-        txtvTitle = layout.findViewById(R.id.txtvTitle);
+        binding.txtvPodcast.setOnClickListener(v -> openPodcast());
         if (Build.VERSION.SDK_INT >= 23) {
-            txtvTitle.setHyphenationFrequency(Layout.HYPHENATION_FREQUENCY_FULL);
+            binding.txtvTitle.setHyphenationFrequency(Layout.HYPHENATION_FREQUENCY_FULL);
         }
-        txtvDuration = layout.findViewById(R.id.txtvDuration);
-        txtvPublished = layout.findViewById(R.id.txtvPublished);
-        txtvTitle.setEllipsize(TextUtils.TruncateAt.END);
-        webvDescription = layout.findViewById(R.id.webvDescription);
-        webvDescription.setTimecodeSelectedListener(time -> {
+        binding.txtvTitle.setEllipsize(TextUtils.TruncateAt.END);
+        binding.webvDescription.setTimecodeSelectedListener(time -> {
             if (controller != null && item.getMedia() != null && controller.getMedia() != null
                     && Objects.equals(item.getMedia().getIdentifier(), controller.getMedia().getIdentifier())) {
                 controller.seekTo(time);
@@ -149,21 +126,11 @@ public class ItemFragment extends Fragment {
                         Snackbar.LENGTH_LONG);
             }
         });
-        registerForContextMenu(webvDescription);
+        registerForContextMenu(binding.webvDescription);
 
-        imgvCover = layout.findViewById(R.id.imgvCover);
-        imgvCover.setOnClickListener(v -> openPodcast());
-        progbarDownload = layout.findViewById(R.id.circularProgressBar);
-        progbarLoading = layout.findViewById(R.id.progbarLoading);
-        butAction1 = layout.findViewById(R.id.butAction1);
-        butAction2 = layout.findViewById(R.id.butAction2);
-        butAction1Icon = layout.findViewById(R.id.butAction1Icon);
-        butAction2Icon = layout.findViewById(R.id.butAction2Icon);
-        butAction1Text = layout.findViewById(R.id.butAction1Text);
-        butAction2Text = layout.findViewById(R.id.butAction2Text);
-        noMediaLabel = layout.findViewById(R.id.noMediaLabel);
+        binding.imgvCover.setOnClickListener(v -> openPodcast());
 
-        butAction1.setOnClickListener(v -> {
+        binding.butAction1.setOnClickListener(v -> {
             if (actionButton1 instanceof StreamActionButton && !UserPreferences.isStreamOverDownload()
                     && UsageStatistics.hasSignificantBiasTo(UsageStatistics.ACTION_STREAM)) {
                 showOnDemandConfigBalloon(true);
@@ -173,7 +140,7 @@ public class ItemFragment extends Fragment {
             }
             actionButton1.onClick(getContext());
         });
-        butAction2.setOnClickListener(v -> {
+        binding.butAction2.setOnClickListener(v -> {
             if (actionButton2 instanceof DownloadActionButton && UserPreferences.isStreamOverDownload()
                     && UsageStatistics.hasSignificantBiasTo(UsageStatistics.ACTION_DOWNLOAD)) {
                 showOnDemandConfigBalloon(false);
@@ -183,12 +150,13 @@ public class ItemFragment extends Fragment {
             }
             actionButton2.onClick(getContext());
         });
-        return layout;
+        return binding.getRoot();
     }
 
     private void showOnDemandConfigBalloon(boolean offerStreaming) {
         final boolean isLocaleRtl = TextUtils.getLayoutDirectionFromLocale(Locale.getDefault())
                 == View.LAYOUT_DIRECTION_RTL;
+        final PopupBubbleViewBinding balloonBinding = PopupBubbleViewBinding.inflate(getLayoutInflater());
         final Balloon balloon = new Balloon.Builder(getContext())
                 .setArrowOrientation(ArrowOrientation.TOP)
                 .setArrowOrientationRules(ArrowOrientationRules.ALIGN_FIXED)
@@ -202,12 +170,9 @@ public class ItemFragment extends Fragment {
                 .setDismissWhenTouchOutside(true)
                 .setLifecycleOwner(this)
                 .build();
-        final Button positiveButton = balloon.getContentView().findViewById(R.id.balloon_button_positive);
-        final Button negativeButton = balloon.getContentView().findViewById(R.id.balloon_button_negative);
-        final TextView message = balloon.getContentView().findViewById(R.id.balloon_message);
-        message.setText(offerStreaming
+        balloonBinding.balloonMessage.setText(offerStreaming
                 ? R.string.on_demand_config_stream_text : R.string.on_demand_config_download_text);
-        positiveButton.setOnClickListener(v1 -> {
+        balloonBinding.balloonButtonPositive.setOnClickListener(v1 -> {
             UserPreferences.setStreamOverDownload(offerStreaming);
             // Update all visible lists to reflect new streaming action button
             EventBus.getDefault().post(new UnreadItemsUpdateEvent());
@@ -215,11 +180,11 @@ public class ItemFragment extends Fragment {
                     R.string.on_demand_config_setting_changed, Snackbar.LENGTH_SHORT);
             balloon.dismiss();
         });
-        negativeButton.setOnClickListener(v1 -> {
+        balloonBinding.balloonButtonNegative.setOnClickListener(v1 -> {
             UsageStatistics.doNotAskAgain(UsageStatistics.ACTION_STREAM); // Type does not matter. Both are silenced.
             balloon.dismiss();
         });
-        balloon.showAlignBottom(butAction1, 0, (int) (-12 * getResources().getDisplayMetrics().density));
+        balloon.showAlignBottom(binding.butAction1, 0, (int) (-12 * getResources().getDisplayMetrics().density));
     }
 
     @Override
@@ -240,7 +205,7 @@ public class ItemFragment extends Fragment {
     public void onResume() {
         super.onResume();
         if (itemsLoaded) {
-            progbarLoading.setVisibility(View.GONE);
+            binding.progbarLoading.setVisibility(View.GONE);
             updateAppearance();
         }
     }
@@ -258,15 +223,15 @@ public class ItemFragment extends Fragment {
         if (disposable != null) {
             disposable.dispose();
         }
-        if (webvDescription != null && root != null) {
-            root.removeView(webvDescription);
-            webvDescription.destroy();
-        }
+        binding.contentRoot.removeView(binding.webvDescription);
+        binding.webvDescription.destroy();
+        binding = null;
     }
 
     private void onFragmentLoaded() {
         if (webviewData != null && !itemsLoaded) {
-            webvDescription.loadDataWithBaseURL("https://127.0.0.1", webviewData, "text/html", "utf-8", "about:blank");
+            binding.webvDescription.loadDataWithBaseURL("https://127.0.0.1",
+                    webviewData, "text/html", "utf-8", "about:blank");
         }
         updateAppearance();
     }
@@ -276,13 +241,13 @@ public class ItemFragment extends Fragment {
             Log.d(TAG, "updateAppearance item is null");
             return;
         }
-        txtvPodcast.setText(item.getFeed().getTitle());
-        txtvTitle.setText(item.getTitle());
+        binding.txtvPodcast.setText(item.getFeed().getTitle());
+        binding.txtvTitle.setText(item.getTitle());
 
         if (item.getPubDate() != null) {
             String pubDateStr = DateFormatter.formatAbbrev(getActivity(), item.getPubDate());
-            txtvPublished.setText(pubDateStr);
-            txtvPublished.setContentDescription(DateFormatter.formatForAccessibility(item.getPubDate()));
+            binding.txtvPublished.setText(pubDateStr);
+            binding.txtvPublished.setContentDescription(DateFormatter.formatForAccessibility(item.getPubDate()));
         }
 
         RequestOptions options = new RequestOptions()
@@ -297,18 +262,18 @@ public class ItemFragment extends Fragment {
                         .load(ImageResourceUtils.getFallbackImageLocation(item))
                         .apply(options))
                 .apply(options)
-                .into(imgvCover);
+                .into(binding.imgvCover);
         updateButtons();
     }
 
     private void updateButtons() {
-        progbarDownload.setVisibility(View.GONE);
+        binding.circularProgressBar.setVisibility(View.GONE);
         if (item.hasMedia()) {
             if (DownloadServiceInterface.get().isDownloadingEpisode(item.getMedia().getDownload_url())) {
-                progbarDownload.setVisibility(View.VISIBLE);
-                progbarDownload.setPercentage(0.01f * Math.max(1,
+                binding.circularProgressBar.setVisibility(View.VISIBLE);
+                binding.circularProgressBar.setPercentage(0.01f * Math.max(1,
                         DownloadServiceInterface.get().getProgress(item.getMedia().getDownload_url())), item);
-                progbarDownload.setIndeterminate(
+                binding.circularProgressBar.setIndeterminate(
                         DownloadServiceInterface.get().isEpisodeQueued(item.getMedia().getDownload_url()));
             }
         }
@@ -317,12 +282,12 @@ public class ItemFragment extends Fragment {
         if (media == null) {
             actionButton1 = new MarkAsPlayedActionButton(item);
             actionButton2 = new VisitWebsiteActionButton(item);
-            noMediaLabel.setVisibility(View.VISIBLE);
+            binding.noMediaLabel.setVisibility(View.VISIBLE);
         } else {
-            noMediaLabel.setVisibility(View.GONE);
+            binding.noMediaLabel.setVisibility(View.GONE);
             if (media.getDuration() > 0) {
-                txtvDuration.setText(Converter.getDurationStringLong(media.getDuration()));
-                txtvDuration.setContentDescription(
+                binding.txtvDuration.setText(Converter.getDurationStringLong(media.getDuration()));
+                binding.txtvDuration.setContentDescription(
                         Converter.getDurationStringLocalized(getContext(), media.getDuration()));
             }
             if (PlaybackStatus.isCurrentlyPlaying(media)) {
@@ -343,20 +308,20 @@ public class ItemFragment extends Fragment {
             }
         }
 
-        butAction1Text.setText(actionButton1.getLabel());
-        butAction1Text.setTransformationMethod(null);
-        butAction1Icon.setImageResource(actionButton1.getDrawable());
-        butAction1.setVisibility(actionButton1.getVisibility());
+        binding.butAction1Text.setText(actionButton1.getLabel());
+        binding.butAction1Text.setTransformationMethod(null);
+        binding.butAction1Icon.setImageResource(actionButton1.getDrawable());
+        binding.butAction1.setVisibility(actionButton1.getVisibility());
 
-        butAction2Text.setText(actionButton2.getLabel());
-        butAction2Text.setTransformationMethod(null);
-        butAction2Icon.setImageResource(actionButton2.getDrawable());
-        butAction2.setVisibility(actionButton2.getVisibility());
+        binding.butAction2Text.setText(actionButton2.getLabel());
+        binding.butAction2Text.setTransformationMethod(null);
+        binding.butAction2Icon.setImageResource(actionButton2.getDrawable());
+        binding.butAction2.setVisibility(actionButton2.getVisibility());
     }
 
     @Override
-    public boolean onContextItemSelected(MenuItem item) {
-        return webvDescription.onContextItemSelected(item);
+    public boolean onContextItemSelected(@NonNull MenuItem item) {
+        return binding.webvDescription.onContextItemSelected(item);
     }
 
     private void openPodcast() {
@@ -406,13 +371,13 @@ public class ItemFragment extends Fragment {
             disposable.dispose();
         }
         if (!itemsLoaded) {
-            progbarLoading.setVisibility(View.VISIBLE);
+            binding.progbarLoading.setVisibility(View.VISIBLE);
         }
         disposable = Observable.fromCallable(this::loadInBackground)
             .subscribeOn(Schedulers.io())
             .observeOn(AndroidSchedulers.mainThread())
             .subscribe(result -> {
-                progbarLoading.setVisibility(View.GONE);
+                binding.progbarLoading.setVisibility(View.GONE);
                 item = result;
                 onFragmentLoaded();
                 itemsLoaded = true;
