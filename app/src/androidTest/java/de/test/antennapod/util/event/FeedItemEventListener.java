@@ -9,7 +9,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import de.danoeh.antennapod.event.FeedItemEvent;
-import io.reactivex.functions.Consumer;
+import io.reactivex.rxjava3.functions.Consumer;
 
 /**
  * Test helpers to listen {@link FeedItemEvent} and handle them accordingly
@@ -28,7 +28,11 @@ public class FeedItemEventListener {
         FeedItemEventListener feedItemEventListener = new FeedItemEventListener();
         try {
             EventBus.getDefault().register(feedItemEventListener);
-            consumer.accept(feedItemEventListener);
+            try {
+                consumer.accept(feedItemEventListener);
+            } catch (final Throwable e) {
+                throw new RuntimeException(e);
+            }
         } finally {
             EventBus.getDefault().unregister(feedItemEventListener);
         }

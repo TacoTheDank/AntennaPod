@@ -47,12 +47,12 @@ import de.danoeh.antennapod.ui.glide.FastBlurTransformation;
 import de.danoeh.antennapod.ui.statistics.StatisticsFragment;
 import de.danoeh.antennapod.ui.statistics.feed.FeedStatisticsFragment;
 import de.danoeh.antennapod.view.ToolbarIconTintManager;
-import io.reactivex.Completable;
-import io.reactivex.Maybe;
-import io.reactivex.MaybeOnSubscribe;
-import io.reactivex.android.schedulers.AndroidSchedulers;
-import io.reactivex.disposables.Disposable;
-import io.reactivex.schedulers.Schedulers;
+import io.reactivex.rxjava3.core.Completable;
+import io.reactivex.rxjava3.core.Maybe;
+import io.reactivex.rxjava3.core.MaybeOnSubscribe;
+import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers;
+import io.reactivex.rxjava3.disposables.Disposable;
+import io.reactivex.rxjava3.schedulers.Schedulers;
 import org.apache.commons.lang3.StringUtils;
 
 import java.util.ArrayList;

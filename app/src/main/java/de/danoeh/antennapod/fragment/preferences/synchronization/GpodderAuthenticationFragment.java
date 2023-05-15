@@ -27,10 +27,10 @@ import de.danoeh.antennapod.core.sync.SynchronizationSettings;
 import de.danoeh.antennapod.core.util.FileNameGenerator;
 import de.danoeh.antennapod.net.sync.gpoddernet.GpodnetService;
 import de.danoeh.antennapod.net.sync.gpoddernet.model.GpodnetDevice;
-import io.reactivex.Completable;
-import io.reactivex.Observable;
-import io.reactivex.android.schedulers.AndroidSchedulers;
-import io.reactivex.schedulers.Schedulers;
+import io.reactivex.rxjava3.core.Completable;
+import io.reactivex.rxjava3.core.Observable;
+import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers;
+import io.reactivex.rxjava3.schedulers.Schedulers;
 
 import java.util.List;
 import java.util.Locale;

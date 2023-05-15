@@ -30,7 +30,7 @@ import de.danoeh.antennapod.adapter.itunes.ItunesAdapter;
 import de.danoeh.antennapod.net.discovery.PodcastSearchResult;
 import de.danoeh.antennapod.net.discovery.PodcastSearcher;
 import de.danoeh.antennapod.net.discovery.PodcastSearcherRegistry;
-import io.reactivex.disposables.Disposable;
+import io.reactivex.rxjava3.disposables.Disposable;
 
 public class OnlineSearchFragment extends Fragment {
 

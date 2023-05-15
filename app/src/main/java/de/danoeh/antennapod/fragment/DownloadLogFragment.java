@@ -21,10 +21,10 @@ import de.danoeh.antennapod.databinding.DownloadLogFragmentBinding;
 import de.danoeh.antennapod.dialog.DownloadLogDetailsDialog;
 import de.danoeh.antennapod.model.download.DownloadResult;
 import de.danoeh.antennapod.view.EmptyViewHandler;
-import io.reactivex.Observable;
-import io.reactivex.android.schedulers.AndroidSchedulers;
-import io.reactivex.disposables.Disposable;
-import io.reactivex.schedulers.Schedulers;
+import io.reactivex.rxjava3.core.Observable;
+import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers;
+import io.reactivex.rxjava3.disposables.Disposable;
+import io.reactivex.rxjava3.schedulers.Schedulers;
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 
