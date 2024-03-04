@@ -13,6 +13,8 @@ import java.util.ArrayList;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotEquals;
 
+import androidx.core.os.BundleCompat;
+
 @RunWith(RobolectricTestRunner.class)
 public class DownloadRequestTest {
 
@@ -91,7 +93,8 @@ public class DownloadRequestTest {
         parcel.setDataPosition(0); // to read the parcel from the beginning.
         bundleOut.readFromParcel(parcel);
 
-        ArrayList<DownloadRequest> fromParcel = bundleOut.getParcelableArrayList("r");
+        ArrayList<DownloadRequest> fromParcel =
+                BundleCompat.getParcelableArrayList(bundleOut, "r", DownloadRequest.class);
 
         // spot-check contents to ensure they are the same
         // DownloadRequest.equals() implementation doesn't quite work

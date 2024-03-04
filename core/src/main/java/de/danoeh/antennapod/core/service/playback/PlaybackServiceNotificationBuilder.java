@@ -16,6 +16,7 @@ import android.view.KeyEvent;
 import androidx.annotation.NonNull;
 import androidx.appcompat.content.res.AppCompatResources;
 import androidx.core.app.NotificationCompat;
+import androidx.core.app.PendingIntentCompat;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.RequestOptions;
 import de.danoeh.antennapod.core.R;
@@ -237,11 +238,11 @@ public class PlaybackServiceNotificationBuilder {
         intent.putExtra(MediaButtonReceiver.EXTRA_KEYCODE, keycodeValue);
 
         if (Build.VERSION.SDK_INT >= 26) {
-            return PendingIntent.getForegroundService(context, requestCode, intent,
-                    PendingIntent.FLAG_UPDATE_CURRENT | PendingIntent.FLAG_IMMUTABLE);
+            return PendingIntentCompat.getForegroundService(context, requestCode, intent,
+                    PendingIntent.FLAG_UPDATE_CURRENT, false);
         } else {
-            return PendingIntent.getService(context, requestCode, intent, PendingIntent.FLAG_UPDATE_CURRENT
-                    | (Build.VERSION.SDK_INT >= 23 ? PendingIntent.FLAG_IMMUTABLE : 0));
+            return PendingIntentCompat.getService(context, requestCode, intent,
+                    PendingIntent.FLAG_UPDATE_CURRENT, false);
         }
     }
 
@@ -251,11 +252,11 @@ public class PlaybackServiceNotificationBuilder {
         intent.putExtra(MediaButtonReceiver.EXTRA_CUSTOM_ACTION, action);
 
         if (Build.VERSION.SDK_INT >= 26) {
-            return PendingIntent.getForegroundService(context, requestCode, intent,
-                    PendingIntent.FLAG_UPDATE_CURRENT | PendingIntent.FLAG_IMMUTABLE);
+            return PendingIntentCompat.getForegroundService(context, requestCode, intent,
+                    PendingIntent.FLAG_UPDATE_CURRENT, false);
         } else {
-            return PendingIntent.getService(context, requestCode, intent, PendingIntent.FLAG_UPDATE_CURRENT
-                    | (Build.VERSION.SDK_INT >= 23 ? PendingIntent.FLAG_IMMUTABLE : 0));
+            return PendingIntentCompat.getService(context, requestCode, intent,
+                    PendingIntent.FLAG_UPDATE_CURRENT, false);
         }
     }
 
