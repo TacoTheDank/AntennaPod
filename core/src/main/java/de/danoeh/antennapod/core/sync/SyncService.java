@@ -5,11 +5,11 @@ import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
-import android.os.Build;
 import android.util.Log;
 
 import androidx.annotation.NonNull;
 import androidx.core.app.NotificationCompat;
+import androidx.core.app.PendingIntentCompat;
 import androidx.core.util.Pair;
 import androidx.work.BackoffPolicy;
 import androidx.work.Constraints;
@@ -314,9 +314,8 @@ public class SyncService extends Worker {
 
         Intent intent = getApplicationContext().getPackageManager().getLaunchIntentForPackage(
                 getApplicationContext().getPackageName());
-        PendingIntent pendingIntent = PendingIntent.getActivity(getApplicationContext(),
-                R.id.pending_intent_sync_error, intent, PendingIntent.FLAG_UPDATE_CURRENT
-                        | (Build.VERSION.SDK_INT >= 23 ? PendingIntent.FLAG_IMMUTABLE : 0));
+        PendingIntent pendingIntent = PendingIntentCompat.getActivity(getApplicationContext(),
+                R.id.pending_intent_sync_error, intent, PendingIntent.FLAG_UPDATE_CURRENT, false);
         Notification notification = new NotificationCompat.Builder(getApplicationContext(),
                 NotificationUtils.CHANNEL_ID_SYNC_ERROR)
                 .setContentTitle(getApplicationContext().getString(R.string.gpodnetsync_error_title))

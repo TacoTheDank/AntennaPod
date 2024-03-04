@@ -5,10 +5,10 @@ import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
-import android.os.Build;
 import android.util.Log;
 import androidx.annotation.NonNull;
 import androidx.core.app.NotificationCompat;
+import androidx.core.app.PendingIntentCompat;
 import androidx.work.Data;
 import androidx.work.ForegroundInfo;
 import androidx.work.Worker;
@@ -225,14 +225,14 @@ public class EpisodeDownloadWorker extends Worker {
 
     private PendingIntent getDownloadLogsIntent(Context context) {
         Intent intent = new MainActivityStarter(context).withDownloadLogsOpen().getIntent();
-        return PendingIntent.getActivity(context, R.id.pending_intent_download_service_report, intent,
-                PendingIntent.FLAG_UPDATE_CURRENT | (Build.VERSION.SDK_INT >= 23 ? PendingIntent.FLAG_IMMUTABLE : 0));
+        return PendingIntentCompat.getActivity(context, R.id.pending_intent_download_service_report, intent,
+                PendingIntent.FLAG_UPDATE_CURRENT, false);
     }
 
     private PendingIntent getDownloadsIntent(Context context) {
         Intent intent = new MainActivityStarter(context).withFragmentLoaded("DownloadsFragment").getIntent();
-        return PendingIntent.getActivity(context, R.id.pending_intent_download_service_notification, intent,
-                PendingIntent.FLAG_UPDATE_CURRENT | (Build.VERSION.SDK_INT >= 23 ? PendingIntent.FLAG_IMMUTABLE : 0));
+        return PendingIntentCompat.getActivity(context, R.id.pending_intent_download_service_notification, intent,
+                PendingIntent.FLAG_UPDATE_CURRENT, false);
     }
 
     private void sendErrorNotification(String title) {

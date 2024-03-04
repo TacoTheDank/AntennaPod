@@ -45,6 +45,8 @@ import androidx.annotation.Nullable;
 import androidx.annotation.StringRes;
 import androidx.core.app.NotificationCompat;
 import androidx.core.app.NotificationManagerCompat;
+import androidx.core.app.PendingIntentCompat;
+import androidx.core.content.ContextCompat;
 import androidx.core.content.IntentCompat;
 import androidx.media.MediaBrowserServiceCompat;
 
@@ -226,9 +228,11 @@ public class PlaybackService extends MediaBrowserServiceCompat {
         stateManager = new PlaybackServiceStateManager(this);
         notificationBuilder = new PlaybackServiceNotificationBuilder(this);
 
-        registerReceiver(autoStateUpdated, new IntentFilter("com.google.android.gms.car.media.STATUS"));
+        ContextCompat.registerReceiver(this, autoStateUpdated, new IntentFilter(
+                "com.google.android.gms.car.media.STATUS"), ContextCompat.RECEIVER_EXPORTED);
         registerReceiver(headsetDisconnected, new IntentFilter(Intent.ACTION_HEADSET_PLUG));
-        registerReceiver(shutdownReceiver, new IntentFilter(PlaybackServiceInterface.ACTION_SHUTDOWN_PLAYBACK_SERVICE));
+        ContextCompat.registerReceiver(this, shutdownReceiver, new IntentFilter(
+                PlaybackServiceInterface.ACTION_SHUTDOWN_PLAYBACK_SERVICE), ContextCompat.RECEIVER_EXPORTED);
         registerReceiver(bluetoothStateUpdated, new IntentFilter(BluetoothA2dp.ACTION_CONNECTION_STATE_CHANGED));
         registerReceiver(audioBecomingNoisy, new IntentFilter(AudioManager.ACTION_AUDIO_BECOMING_NOISY));
         EventBus.getDefault().register(this);
@@ -255,8 +259,8 @@ public class PlaybackService extends MediaBrowserServiceCompat {
         ComponentName eventReceiver = new ComponentName(getApplicationContext(), MediaButtonReceiver.class);
         Intent mediaButtonIntent = new Intent(Intent.ACTION_MEDIA_BUTTON);
         mediaButtonIntent.setComponent(eventReceiver);
-        PendingIntent buttonReceiverIntent = PendingIntent.getBroadcast(this, 0, mediaButtonIntent,
-                PendingIntent.FLAG_UPDATE_CURRENT | (Build.VERSION.SDK_INT >= 31 ? PendingIntent.FLAG_MUTABLE : 0));
+        PendingIntent buttonReceiverIntent = PendingIntentCompat.getBroadcast(this, 0, mediaButtonIntent,
+                PendingIntent.FLAG_UPDATE_CURRENT, true);
 
         mediaSession = new MediaSessionCompat(getApplicationContext(), TAG, eventReceiver, buttonReceiverIntent);
         setSessionToken(mediaSession.getSessionToken());
@@ -589,28 +593,28 @@ public class PlaybackService extends MediaBrowserServiceCompat {
         intentAllowThisTime.setAction(PlaybackServiceInterface.EXTRA_ALLOW_STREAM_THIS_TIME);
         intentAllowThisTime.putExtra(PlaybackServiceInterface.EXTRA_ALLOW_STREAM_THIS_TIME, true);
         PendingIntent pendingIntentAllowThisTime;
-        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O) {
-            pendingIntentAllowThisTime = PendingIntent.getForegroundService(this,
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            pendingIntentAllowThisTime = PendingIntentCompat.getForegroundService(this,
                     R.id.pending_intent_allow_stream_this_time, intentAllowThisTime,
-                    PendingIntent.FLAG_UPDATE_CURRENT | PendingIntent.FLAG_IMMUTABLE);
+                    PendingIntent.FLAG_UPDATE_CURRENT, false);
         } else {
-            pendingIntentAllowThisTime = PendingIntent.getService(this,
-                    R.id.pending_intent_allow_stream_this_time, intentAllowThisTime, PendingIntent.FLAG_UPDATE_CURRENT
-                            | (Build.VERSION.SDK_INT >= 23 ? PendingIntent.FLAG_IMMUTABLE : 0));
+            pendingIntentAllowThisTime = PendingIntentCompat.getService(this,
+                    R.id.pending_intent_allow_stream_this_time, intentAllowThisTime,
+                    PendingIntent.FLAG_UPDATE_CURRENT, false);
         }
 
         Intent intentAlwaysAllow = new Intent(intentAllowThisTime);
         intentAlwaysAllow.setAction(PlaybackServiceInterface.EXTRA_ALLOW_STREAM_ALWAYS);
         intentAlwaysAllow.putExtra(PlaybackServiceInterface.EXTRA_ALLOW_STREAM_ALWAYS, true);
         PendingIntent pendingIntentAlwaysAllow;
-        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O) {
-            pendingIntentAlwaysAllow = PendingIntent.getForegroundService(this,
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            pendingIntentAlwaysAllow = PendingIntentCompat.getForegroundService(this,
                     R.id.pending_intent_allow_stream_always, intentAlwaysAllow,
-                    PendingIntent.FLAG_UPDATE_CURRENT | PendingIntent.FLAG_IMMUTABLE);
+                    PendingIntent.FLAG_UPDATE_CURRENT, false);
         } else {
-            pendingIntentAlwaysAllow = PendingIntent.getService(this,
-                    R.id.pending_intent_allow_stream_always, intentAlwaysAllow, PendingIntent.FLAG_UPDATE_CURRENT
-                            | (Build.VERSION.SDK_INT >= 23 ? PendingIntent.FLAG_IMMUTABLE : 0));
+            pendingIntentAlwaysAllow = PendingIntentCompat.getService(this,
+                    R.id.pending_intent_allow_stream_always, intentAlwaysAllow,
+                    PendingIntent.FLAG_UPDATE_CURRENT, false);
         }
 
         NotificationCompat.Builder builder = new NotificationCompat.Builder(this,
@@ -1354,9 +1358,8 @@ public class PlaybackService extends MediaBrowserServiceCompat {
         }
 
         if (stateManager.hasReceivedValidStartCommand()) {
-            mediaSession.setSessionActivity(PendingIntent.getActivity(this, R.id.pending_intent_player_activity,
-                    PlaybackService.getPlayerActivityIntent(this), PendingIntent.FLAG_UPDATE_CURRENT
-                            | (Build.VERSION.SDK_INT >= 31 ? PendingIntent.FLAG_MUTABLE : 0)));
+            mediaSession.setSessionActivity(PendingIntentCompat.getActivity(this, R.id.pending_intent_player_activity,
+                    PlaybackService.getPlayerActivityIntent(this), PendingIntent.FLAG_UPDATE_CURRENT, true));
             try {
                 mediaSession.setMetadata(builder.build());
             } catch (OutOfMemoryError e) {

@@ -9,4 +9,5 @@ android {
 
 dependencies {
     annotationProcessor "androidx.annotation:annotation:$annotationVersion"
+    implementation "androidx.core:core:$coreVersion"
 }

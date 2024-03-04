@@ -8,10 +8,10 @@ import android.content.Intent;
 import android.content.res.Resources;
 
 import android.graphics.Bitmap;
-import android.os.Build;
 import android.util.Log;
 import androidx.core.app.NotificationCompat;
 import androidx.core.app.NotificationManagerCompat;
+import androidx.core.app.PendingIntentCompat;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.RequestOptions;
@@ -69,8 +69,8 @@ public class NewEpisodesNotification {
         intent.setComponent(new ComponentName(context, "de.danoeh.antennapod.activity.MainActivity"));
         intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
         intent.putExtra("fragment_feed_id", feed.getId());
-        PendingIntent pendingIntent = PendingIntent.getActivity(context, 0, intent,
-                (Build.VERSION.SDK_INT >= 23 ? PendingIntent.FLAG_IMMUTABLE : 0));
+        PendingIntent pendingIntent = PendingIntentCompat.getActivity(context, 0, intent,
+                0, false);
 
         Notification notification = new NotificationCompat.Builder(
                 context, NotificationUtils.CHANNEL_ID_EPISODE_NOTIFICATIONS)
@@ -95,8 +95,8 @@ public class NewEpisodesNotification {
         intent.setComponent(new ComponentName(context, "de.danoeh.antennapod.activity.MainActivity"));
         intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
         intent.putExtra("fragment_tag", "NewEpisodesFragment");
-        PendingIntent pendingIntent = PendingIntent.getActivity(context, 0, intent,
-                (Build.VERSION.SDK_INT >= 23 ? PendingIntent.FLAG_IMMUTABLE : 0));
+        PendingIntent pendingIntent = PendingIntentCompat.getActivity(context, 0, intent,
+                0, false);
 
         Notification notificationGroupSummary = new NotificationCompat.Builder(
                 context, NotificationUtils.CHANNEL_ID_EPISODE_NOTIFICATIONS)

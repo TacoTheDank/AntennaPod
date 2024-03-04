@@ -4,8 +4,9 @@ import android.app.PendingIntent;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
-import android.os.Build;
+import androidx.core.app.PendingIntentCompat;
 import androidx.core.content.ContextCompat;
+import androidx.core.content.IntentCompat;
 import android.util.Log;
 import android.view.KeyEvent;
 
@@ -31,7 +32,7 @@ public class MediaButtonReceiver extends BroadcastReceiver {
         if (intent == null || intent.getExtras() == null) {
             return;
         }
-        KeyEvent event = intent.getParcelableExtra(Intent.EXTRA_KEY_EVENT);
+        KeyEvent event = IntentCompat.getParcelableExtra(intent, Intent.EXTRA_KEY_EVENT, KeyEvent.class);
         if (event != null && event.getAction() == KeyEvent.ACTION_DOWN && event.getRepeatCount() == 0) {
             ClientConfigurator.initialize(context);
             Intent serviceIntent = new Intent(PLAYBACK_SERVICE_INTENT);
@@ -56,7 +57,7 @@ public class MediaButtonReceiver extends BroadcastReceiver {
     }
 
     public static PendingIntent createPendingIntent(Context context, int eventCode) {
-        return PendingIntent.getBroadcast(context, eventCode, createIntent(context, eventCode),
-                (Build.VERSION.SDK_INT >= 23 ? PendingIntent.FLAG_IMMUTABLE : 0));
+        return PendingIntentCompat.getBroadcast(context, eventCode, createIntent(context, eventCode),
+                0, false);
     }
 }
