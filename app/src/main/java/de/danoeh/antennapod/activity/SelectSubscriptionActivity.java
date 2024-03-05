@@ -9,6 +9,7 @@ import android.util.Log;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 
+import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.content.pm.ShortcutInfoCompat;
@@ -122,15 +123,16 @@ public class SelectSubscriptionActivity extends AppCompatActivity {
                 .apply(RequestOptions.overrideOf(iconSize, iconSize))
                 .listener(new RequestListener<Bitmap>() {
                     @Override
-                    public boolean onLoadFailed(@Nullable GlideException e, Object model,
-                                                Target<Bitmap> target, boolean isFirstResource) {
+                    public boolean onLoadFailed(@Nullable GlideException e, @Nullable Object model,
+                                                @NonNull Target<Bitmap> target, boolean isFirstResource) {
                         addShortcut(feed, null);
                         return true;
                     }
 
                     @Override
-                    public boolean onResourceReady(Bitmap resource, Object model,
-                            Target<Bitmap> target, DataSource dataSource, boolean isFirstResource) {
+                    public boolean onResourceReady(@NonNull Bitmap resource, @NonNull Object model,
+                                                   Target<Bitmap> target, @NonNull DataSource dataSource,
+                                                   boolean isFirstResource) {
                         addShortcut(feed, resource);
                         return true;
                     }
