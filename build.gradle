@@ -1,10 +1,12 @@
+import com.github.spotbugs.snom.SpotBugsTask
+
 buildscript {
     ext.agpVersion = "8.0.2"
 }
 plugins {
     id 'com.android.application' version "$agpVersion" apply false
     id 'com.android.library' version "$agpVersion" apply false
-    id 'com.github.spotbugs' version '4.8.0' apply false
+    id 'com.github.spotbugs' version '5.0.14' apply false
     id 'checkstyle'
 }
 
@@ -62,4 +64,30 @@ tasks.register('checkstyle', Checkstyle) {
     exclude("**/gen/**")
     exclude("**/build/**")
     exclude("**/generated/**")
+}
+
+subprojects {
+    apply plugin: 'com.github.spotbugs'
+
+    spotbugs {
+        toolVersion = '4.5.3'
+        effort = 'max'
+        reportLevel = 'medium'
+        excludeFilter = rootProject.file('config/spotbugs/exclude.xml')
+        ignoreFailures = true // Handled by printing task
+        reportsDir = layout.buildDirectory.file("reports/spotbugs/").get().asFile
+    }
+
+    tasks.withType(SpotBugsTask).configureEach {
+        reports {
+            xml {
+                required = true
+                if (getGradle().getStartParameter().getTaskRequests().toString().contains("spotbugsPlay")) {
+                    outputLocation = layout.buildDirectory.file("reports/spotbugs/playDebug.xml").get().asFile
+                } else {
+                    outputLocation = layout.buildDirectory.file("reports/spotbugs/debug.xml").get().asFile
+                }
+            }
+        }
+    }
 }

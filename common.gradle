@@ -73,16 +73,6 @@ gradle.projectsEvaluated {
     }
 }
 
-apply plugin: 'com.github.spotbugs'
-
-spotbugs {
-    toolVersion = '4.2.3'
-    effort = 'max'
-    reportLevel = 'medium'
-    excludeFilter = rootProject.file('config/spotbugs/exclude.xml')
-    ignoreFailures = true // Handled by printing task
-}
-
 gradle.taskGraph.whenReady { taskGraph ->
     taskGraph.allTasks.each { task ->
         if (task.name.toLowerCase().contains('spotbugs')) {
