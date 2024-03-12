@@ -77,14 +77,13 @@ public final class DBReader {
 
     @NonNull
     private static List<Feed> getFeedList(PodDBAdapter adapter) {
-        try (Cursor cursor = adapter.getAllFeedsCursor()) {
-            List<Feed> feeds = new ArrayList<>(cursor.getCount());
-            while (cursor.moveToNext()) {
-                Feed feed = extractFeedFromCursorRow(cursor);
-                feeds.add(feed);
-            }
-            return feeds;
+        final Cursor cursor = adapter.getAllFeedsCursor();
+        List<Feed> feeds = new ArrayList<>(cursor.getCount());
+        while (cursor.moveToNext()) {
+            Feed feed = extractFeedFromCursorRow(cursor);
+            feeds.add(feed);
         }
+        return feeds;
     }
 
     /**
@@ -253,13 +252,12 @@ public final class DBReader {
     }
 
     private static LongList getQueueIDList(PodDBAdapter adapter) {
-        try (Cursor cursor = adapter.getQueueIDCursor()) {
-            LongList queueIds = new LongList(cursor.getCount());
-            while (cursor.moveToNext()) {
-                queueIds.add(cursor.getLong(0));
-            }
-            return queueIds;
+        final Cursor cursor = adapter.getQueueIDCursor();
+        LongList queueIds = new LongList(cursor.getCount());
+        while (cursor.moveToNext()) {
+            queueIds.add(cursor.getLong(0));
         }
+        return queueIds;
     }
 
     /**
@@ -488,16 +486,15 @@ public final class DBReader {
         Log.d(TAG, "Loading feeditem with id " + itemId);
 
         FeedItem item = null;
-        try (Cursor cursor = adapter.getFeedItemCursor(Long.toString(itemId))) {
-            if (cursor.moveToNext()) {
-                List<FeedItem> list = extractItemlistFromCursor(adapter, cursor);
-                if (!list.isEmpty()) {
-                    item = list.get(0);
-                    loadAdditionalFeedItemListData(list);
-                }
+        final Cursor cursor = adapter.getFeedItemCursor(Long.toString(itemId));
+        if (cursor.moveToNext()) {
+            List<FeedItem> list = extractItemlistFromCursor(adapter, cursor);
+            if (!list.isEmpty()) {
+                item = list.get(0);
+                loadAdditionalFeedItemListData(list);
             }
-            return item;
         }
+        return item;
     }
 
     /**
@@ -571,17 +568,16 @@ public final class DBReader {
      */
     @Nullable
     private static FeedItem getFeedItemByGuidOrEpisodeUrl(final String guid, final String episodeUrl,
-            PodDBAdapter adapter) {
-        try (Cursor cursor = adapter.getFeedItemCursor(guid, episodeUrl)) {
-            if (!cursor.moveToNext()) {
-                return null;
-            }
-            List<FeedItem> list = extractItemlistFromCursor(adapter, cursor);
-            if (!list.isEmpty()) {
-                return list.get(0);
-            }
+                                                          PodDBAdapter adapter) {
+        final Cursor cursor = adapter.getFeedItemCursor(guid, episodeUrl);
+        if (!cursor.moveToNext()) {
             return null;
         }
+        List<FeedItem> list = extractItemlistFromCursor(adapter, cursor);
+        if (!list.isEmpty()) {
+            return list.get(0);
+        }
+        return null;
     }
 
     /**
@@ -604,18 +600,17 @@ public final class DBReader {
 
     private static String getImageAuthentication(final String imageUrl, PodDBAdapter adapter) {
         String credentials;
-        try (Cursor cursor = adapter.getImageAuthenticationCursor(imageUrl)) {
-            if (cursor.moveToFirst()) {
-                String username = cursor.getString(0);
-                String password = cursor.getString(1);
-                if (!TextUtils.isEmpty(username) && password != null) {
-                    credentials = username + ":" + password;
-                } else {
-                    credentials = "";
-                }
+        final Cursor cursor = adapter.getImageAuthenticationCursor(imageUrl);
+        if (cursor.moveToFirst()) {
+            String username = cursor.getString(0);
+            String password = cursor.getString(1);
+            if (!TextUtils.isEmpty(username) && password != null) {
+                credentials = username + ":" + password;
             } else {
                 credentials = "";
             }
+        } else {
+            credentials = "";
         }
         return credentials;
     }
@@ -678,18 +673,17 @@ public final class DBReader {
     }
 
     private static List<Chapter> loadChaptersOfFeedItem(PodDBAdapter adapter, FeedItem item) {
-        try (Cursor cursor = adapter.getSimpleChaptersOfFeedItemCursor(item)) {
-            int chaptersCount = cursor.getCount();
-            if (chaptersCount == 0) {
-                item.setChapters(null);
-                return null;
-            }
-            ArrayList<Chapter> chapters = new ArrayList<>();
-            while (cursor.moveToNext()) {
-                chapters.add(ChapterCursorMapper.convert(cursor));
-            }
-            return chapters;
+        final Cursor cursor = adapter.getSimpleChaptersOfFeedItemCursor(item);
+        int chaptersCount = cursor.getCount();
+        if (chaptersCount == 0) {
+            item.setChapters(null);
+            return null;
         }
+        ArrayList<Chapter> chapters = new ArrayList<>();
+        while (cursor.moveToNext()) {
+            chapters.add(ChapterCursorMapper.convert(cursor));
+        }
+        return chapters;
     }
 
     /**
@@ -770,17 +764,16 @@ public final class DBReader {
         List<MonthlyStatisticsItem> months = new ArrayList<>();
         PodDBAdapter adapter = PodDBAdapter.getInstance();
         adapter.open();
-        try (Cursor cursor = adapter.getMonthlyStatisticsCursor()) {
-            int indexMonth = cursor.getColumnIndexOrThrow("month");
-            int indexYear = cursor.getColumnIndexOrThrow("year");
-            int indexTotalDuration = cursor.getColumnIndexOrThrow("total_duration");
-            while (cursor.moveToNext()) {
-                MonthlyStatisticsItem item = new MonthlyStatisticsItem();
-                item.setMonth(Integer.parseInt(cursor.getString(indexMonth)));
-                item.setYear(Integer.parseInt(cursor.getString(indexYear)));
-                item.setTimePlayed(cursor.getLong(indexTotalDuration));
-                months.add(item);
-            }
+        final Cursor cursor = adapter.getMonthlyStatisticsCursor();
+        int indexMonth = cursor.getColumnIndexOrThrow("month");
+        int indexYear = cursor.getColumnIndexOrThrow("year");
+        int indexTotalDuration = cursor.getColumnIndexOrThrow("total_duration");
+        while (cursor.moveToNext()) {
+            MonthlyStatisticsItem item = new MonthlyStatisticsItem();
+            item.setMonth(Integer.parseInt(cursor.getString(indexMonth)));
+            item.setYear(Integer.parseInt(cursor.getString(indexYear)));
+            item.setTimePlayed(cursor.getLong(indexTotalDuration));
+            months.add(item);
         }
         adapter.close();
         return months;
@@ -803,33 +796,32 @@ public final class DBReader {
         adapter.open();
 
         StatisticsResult result = new StatisticsResult();
-        try (Cursor cursor = adapter.getFeedStatisticsCursor(includeMarkedAsPlayed, timeFilterFrom, timeFilterTo)) {
-            int indexOldestDate = cursor.getColumnIndexOrThrow("oldest_date");
-            int indexNumEpisodes = cursor.getColumnIndexOrThrow("num_episodes");
-            int indexEpisodesStarted = cursor.getColumnIndexOrThrow("episodes_started");
-            int indexTotalTime = cursor.getColumnIndexOrThrow("total_time");
-            int indexPlayedTime = cursor.getColumnIndexOrThrow("played_time");
-            int indexNumDownloaded = cursor.getColumnIndexOrThrow("num_downloaded");
-            int indexDownloadSize = cursor.getColumnIndexOrThrow("download_size");
+        final Cursor cursor = adapter.getFeedStatisticsCursor(includeMarkedAsPlayed, timeFilterFrom, timeFilterTo);
+        int indexOldestDate = cursor.getColumnIndexOrThrow("oldest_date");
+        int indexNumEpisodes = cursor.getColumnIndexOrThrow("num_episodes");
+        int indexEpisodesStarted = cursor.getColumnIndexOrThrow("episodes_started");
+        int indexTotalTime = cursor.getColumnIndexOrThrow("total_time");
+        int indexPlayedTime = cursor.getColumnIndexOrThrow("played_time");
+        int indexNumDownloaded = cursor.getColumnIndexOrThrow("num_downloaded");
+        int indexDownloadSize = cursor.getColumnIndexOrThrow("download_size");
 
-            while (cursor.moveToNext()) {
-                Feed feed = extractFeedFromCursorRow(cursor);
+        while (cursor.moveToNext()) {
+            Feed feed = extractFeedFromCursorRow(cursor);
 
-                long feedPlayedTime = Long.parseLong(cursor.getString(indexPlayedTime)) / 1000;
-                long feedTotalTime = Long.parseLong(cursor.getString(indexTotalTime)) / 1000;
-                long episodes = Long.parseLong(cursor.getString(indexNumEpisodes));
-                long episodesStarted = Long.parseLong(cursor.getString(indexEpisodesStarted));
-                long totalDownloadSize = Long.parseLong(cursor.getString(indexDownloadSize));
-                long episodesDownloadCount = Long.parseLong(cursor.getString(indexNumDownloaded));
-                long oldestDate = Long.parseLong(cursor.getString(indexOldestDate));
+            long feedPlayedTime = Long.parseLong(cursor.getString(indexPlayedTime)) / 1000;
+            long feedTotalTime = Long.parseLong(cursor.getString(indexTotalTime)) / 1000;
+            long episodes = Long.parseLong(cursor.getString(indexNumEpisodes));
+            long episodesStarted = Long.parseLong(cursor.getString(indexEpisodesStarted));
+            long totalDownloadSize = Long.parseLong(cursor.getString(indexDownloadSize));
+            long episodesDownloadCount = Long.parseLong(cursor.getString(indexNumDownloaded));
+            long oldestDate = Long.parseLong(cursor.getString(indexOldestDate));
 
-                if (episodes > 0 && oldestDate < Long.MAX_VALUE) {
-                    result.oldestDate = Math.min(result.oldestDate, oldestDate);
-                }
-
-                result.feedTime.add(new StatisticsItem(feed, feedTotalTime, feedPlayedTime, episodes,
-                        episodesStarted, totalDownloadSize, episodesDownloadCount));
+            if (episodes > 0 && oldestDate < Long.MAX_VALUE) {
+                result.oldestDate = Math.min(result.oldestDate, oldestDate);
             }
+
+            result.feedTime.add(new StatisticsItem(feed, feedTotalTime, feedPlayedTime, episodes,
+                    episodesStarted, totalDownloadSize, episodesDownloadCount));
         }
         adapter.close();
         return result;
@@ -838,12 +830,11 @@ public final class DBReader {
     public static long getTimeBetweenReleaseAndPlayback(long timeFilterFrom, long timeFilterTo) {
         PodDBAdapter adapter = PodDBAdapter.getInstance();
         adapter.open();
-        try (Cursor cursor = adapter.getTimeBetweenReleaseAndPlayback(timeFilterFrom, timeFilterTo)) {
-            cursor.moveToFirst();
-            long result = Long.parseLong(cursor.getString(0));
-            adapter.close();
-            return result;
-        }
+        final Cursor cursor = adapter.getTimeBetweenReleaseAndPlayback(timeFilterFrom, timeFilterTo);
+        cursor.moveToFirst();
+        long result = Long.parseLong(cursor.getString(0));
+        adapter.close();
+        return result;
     }
 
     /**
