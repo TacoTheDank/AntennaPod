@@ -55,7 +55,7 @@ public class QuickSettingsTileService extends TileService {
         if (qsTile == null) {
             Log.d(TAG, "Ignored call to update QS tile: getQsTile() returned null.");
         } else {
-            boolean isPlaying = PlaybackService.isRunning
+            boolean isPlaying = PlaybackService.isRunning()
                     && PlaybackPreferences.getCurrentPlayerStatus()
                         == PlaybackPreferences.PLAYER_STATUS_PLAYING;
             qsTile.setState(isPlaying ? Tile.STATE_ACTIVE : Tile.STATE_INACTIVE);

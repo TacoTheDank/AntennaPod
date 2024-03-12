@@ -19,7 +19,7 @@ public abstract class Downloader implements Callable<Downloader> {
     private static final String TAG = "Downloader";
 
     private volatile boolean finished;
-    public volatile boolean cancelled;
+    private volatile boolean cancelled;
     public String permanentRedirectUrl = null;
 
     @NonNull
@@ -71,8 +71,11 @@ public abstract class Downloader implements Callable<Downloader> {
         return finished;
     }
 
+    public boolean isCancelled() {
+        return cancelled;
+    }
+
     public void cancel() {
         cancelled = true;
     }
-
 }

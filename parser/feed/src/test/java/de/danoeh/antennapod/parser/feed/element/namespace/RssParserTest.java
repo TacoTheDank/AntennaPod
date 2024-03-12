@@ -32,7 +32,7 @@ public class RssParserTest {
         assertEquals("en", feed.getLanguage());
         assertEquals("http://example.com", feed.getLink());
         assertEquals("This is the description", feed.getDescription());
-        assertEquals("http://example.com/payment", feed.getPaymentLinks().get(0).url);
+        assertEquals("http://example.com/payment", feed.getPaymentLinks().get(0).getUrl());
         assertEquals("http://example.com/picture", feed.getImageUrl());
         assertEquals(10, feed.getItems().size());
         for (int i = 0; i < feed.getItems().size(); i++) {
@@ -63,7 +63,7 @@ public class RssParserTest {
         assertEquals("title", feed.getTitle());
         assertEquals("http://example.com", feed.getLink());
         assertEquals("This is the description", feed.getDescription());
-        assertEquals("http://example.com/payment", feed.getPaymentLinks().get(0).url);
+        assertEquals("http://example.com/payment", feed.getPaymentLinks().get(0).getUrl());
         assertEquals("https://example.com/image.png", feed.getImageUrl());
         assertEquals(0, feed.getItems().size());
     }
@@ -75,7 +75,7 @@ public class RssParserTest {
         assertEquals("title", feed.getTitle());
         assertEquals("http://example.com", feed.getLink());
         assertEquals("This is the description", feed.getDescription());
-        assertEquals("http://example.com/payment", feed.getPaymentLinks().get(0).url);
+        assertEquals("http://example.com/payment", feed.getPaymentLinks().get(0).getUrl());
         assertNull(feed.getImageUrl());
         assertEquals(1, feed.getItems().size());
         FeedItem feedItem = feed.getItems().get(0);
@@ -89,12 +89,12 @@ public class RssParserTest {
         File feedFile = FeedParserTestHelper.getFeedFile("feed-rss-testMultipleFundingTags.xml");
         Feed feed = FeedParserTestHelper.runFeedParser(feedFile);
         assertEquals(3, feed.getPaymentLinks().size());
-        assertEquals("Text 1", feed.getPaymentLinks().get(0).content);
-        assertEquals("https://example.com/funding1", feed.getPaymentLinks().get(0).url);
-        assertEquals("Text 2", feed.getPaymentLinks().get(1).content);
-        assertEquals("https://example.com/funding2", feed.getPaymentLinks().get(1).url);
-        assertTrue(TextUtils.isEmpty(feed.getPaymentLinks().get(2).content));
-        assertEquals("https://example.com/funding3", feed.getPaymentLinks().get(2).url);
+        assertEquals("Text 1", feed.getPaymentLinks().get(0).getContent());
+        assertEquals("https://example.com/funding1", feed.getPaymentLinks().get(0).getUrl());
+        assertEquals("Text 2", feed.getPaymentLinks().get(1).getContent());
+        assertEquals("https://example.com/funding2", feed.getPaymentLinks().get(1).getUrl());
+        assertTrue(TextUtils.isEmpty(feed.getPaymentLinks().get(2).getContent()));
+        assertEquals("https://example.com/funding3", feed.getPaymentLinks().get(2).getUrl());
     }
 
     @Test

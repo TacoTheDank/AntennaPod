@@ -66,7 +66,7 @@ public class NavListAdapter extends RecyclerView.Adapter<NavListAdapter.Holder>
     private final String[] titles;
     private final ItemAccess itemAccess;
     private final WeakReference<Activity> activity;
-    public boolean showSubscriptionList = true;
+    private boolean showSubscriptionList = true;
 
     public NavListAdapter(ItemAccess itemAccess, Activity context) {
         this.itemAccess = itemAccess;
@@ -83,6 +83,10 @@ public class NavListAdapter extends RecyclerView.Adapter<NavListAdapter.Holder>
         if (UserPreferences.PREF_HIDDEN_DRAWER_ITEMS.equals(key)) {
             loadItems();
         }
+    }
+
+    public boolean isShowSubscriptionList() {
+        return showSubscriptionList;
     }
 
     private void loadItems() {

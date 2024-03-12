@@ -380,8 +380,7 @@ public class NavDrawerFragment extends Fragment implements SharedPreferences.OnS
                                         }, error -> Log.e(TAG, Log.getStackTraceString(error)));
                     }
                 }
-            } else if (UserPreferences.getSubscriptionsFilter().isEnabled()
-                    && navAdapter.showSubscriptionList) {
+            } else if (UserPreferences.getSubscriptionsFilter().isEnabled() && navAdapter.isShowSubscriptionList()) {
                 new SubscriptionsFilterDialog().show(getChildFragmentManager(), "filter");
             }
         }

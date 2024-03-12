@@ -9,6 +9,7 @@ import android.view.SurfaceHolder;
 
 import java.util.Collections;
 import java.util.List;
+import java.util.concurrent.Executors;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 import androidx.annotation.Nullable;
@@ -60,7 +61,8 @@ public class CastPsmp extends PlaybackServiceMediaPlayer {
             return null;
         }
         try {
-            if (CastContext.getSharedInstance(context).getCastState() == CastState.CONNECTED) {
+            if (CastContext.getSharedInstance(context, Executors.newSingleThreadExecutor())
+                    .getResult().getCastState() == CastState.CONNECTED) {
                 return new CastPsmp(context, callback);
             }
         } catch (Exception e) {
@@ -72,9 +74,11 @@ public class CastPsmp extends PlaybackServiceMediaPlayer {
     public CastPsmp(@NonNull Context context, @NonNull PSMPCallback callback) {
         super(context, callback);
 
-        castContext = CastContext.getSharedInstance(context);
+        castContext = CastContext.getSharedInstance(context, Executors.newSingleThreadExecutor()).getResult();
         remoteMediaClient = castContext.getSessionManager().getCurrentCastSession().getRemoteMediaClient();
-        remoteMediaClient.registerCallback(remoteMediaClientCallback);
+        if (remoteMediaClient != null) {
+            remoteMediaClient.registerCallback(remoteMediaClientCallback);
+        }
         media = null;
         mediaType = null;
         startWhenPrepared = new AtomicBoolean(false);

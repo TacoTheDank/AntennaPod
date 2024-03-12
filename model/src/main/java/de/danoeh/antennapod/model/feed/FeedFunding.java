@@ -8,16 +8,24 @@ public class FeedFunding {
     public static final String FUNDING_ENTRIES_SEPARATOR = "\u001e";
     public static final String FUNDING_TITLE_SEPARATOR = "\u001f";
 
-    public String url;
-    public String content;
+    private String url;
+    private String content;
 
     public FeedFunding(String url, String content) {
         this.url = url;
         this.content = content;
     }
 
+    public String getContent() {
+        return content;
+    }
+
     public void setContent(String content) {
         this.content = content;
+    }
+
+    public String getUrl() {
+        return url;
     }
 
     public void setUrl(String url) {

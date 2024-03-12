@@ -74,6 +74,7 @@
     <Match><Package name="de.danoeh.antennapod.ui.echo.databinding"/></Match>
     <Match><Package name="de.danoeh.antennapod.ui.statistics.databinding"/></Match>
 
+    <Match><Bug pattern="CT_CONSTRUCTOR_THROW"/></Match>
     <Match><Bug pattern="DMI_RANDOM_USED_ONLY_ONCE"/></Match>
     <Match><Bug pattern="EI_EXPOSE_REP"/></Match>
     <Match><Bug pattern="EI_EXPOSE_REP2"/></Match>

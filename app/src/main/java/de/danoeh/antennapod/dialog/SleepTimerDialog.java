@@ -145,7 +145,7 @@ public class SleepTimerDialog extends DialogFragment {
         });
         Button setButton = content.findViewById(R.id.setSleeptimerButton);
         setButton.setOnClickListener(v -> {
-            if (!PlaybackService.isRunning) {
+            if (!PlaybackService.isRunning()) {
                 Snackbar.make(content, R.string.no_media_playing_label, Snackbar.LENGTH_LONG).show();
                 return;
             }

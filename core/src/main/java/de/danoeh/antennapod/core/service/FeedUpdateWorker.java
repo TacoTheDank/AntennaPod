@@ -175,7 +175,8 @@ public class FeedUpdateWorker extends Worker {
         downloader.call();
 
         if (!downloader.getResult().isSuccessful()) {
-            if (downloader.cancelled || downloader.getResult().getReason() == DownloadError.ERROR_DOWNLOAD_CANCELLED) {
+            if (downloader.isCancelled() || downloader.getResult().getReason()
+                    == DownloadError.ERROR_DOWNLOAD_CANCELLED) {
                 return;
             }
             DBWriter.setFeedLastUpdateFailed(request.getFeedfileId(), true);

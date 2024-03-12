@@ -41,7 +41,7 @@ public class PlaybackServiceStarter {
     }
 
     public void start() {
-        if (PlaybackService.isRunning && !callEvenIfRunning) {
+        if (PlaybackService.isRunning() && !callEvenIfRunning) {
             return;
         }
         ContextCompat.startForegroundService(context, getIntent());

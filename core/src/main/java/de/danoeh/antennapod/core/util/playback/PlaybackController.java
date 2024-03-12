@@ -64,7 +64,7 @@ public abstract class PlaybackController {
             EventBus.getDefault().register(this);
             eventsRegistered = true;
         }
-        if (PlaybackService.isRunning) {
+        if (PlaybackService.isRunning()) {
             initServiceRunning();
         } else {
             updatePlayButtonShowsPlay(true);
@@ -148,7 +148,7 @@ public abstract class PlaybackController {
      */
     private void bindToService() {
         Log.d(TAG, "Trying to connect to service");
-        if (!PlaybackService.isRunning) {
+        if (!PlaybackService.isRunning()) {
             throw new IllegalStateException("Trying to bind but service is not running");
         }
         boolean bound = activity.bindService(new Intent(activity, PlaybackService.class), mConnection, 0);
@@ -188,7 +188,7 @@ public abstract class PlaybackController {
                 handleStatus();
             } else {
                 Log.w(TAG, "Couldn't receive status update: playbackService was null");
-                if (PlaybackService.isRunning) {
+                if (PlaybackService.isRunning()) {
                     bindToService();
                 } else {
                     status = PlayerStatus.STOPPED;
@@ -209,7 +209,7 @@ public abstract class PlaybackController {
                 return;
             }
             if (type == PlaybackServiceInterface.NOTIFICATION_TYPE_RELOAD) {
-                if (playbackService == null && PlaybackService.isRunning) {
+                if (playbackService == null && PlaybackService.isRunning()) {
                     bindToService();
                     return;
                 }

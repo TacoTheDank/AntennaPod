@@ -141,7 +141,12 @@ public class PlaybackService extends MediaBrowserServiceCompat {
     /**
      * Is true if service is running.
      */
-    public static boolean isRunning = false;
+    private static boolean isRunning = false;
+
+    public static boolean isRunning() {
+        return isRunning;
+    }
+
     /**
      * Is true if the service was running, but paused due to headphone disconnect
      */
@@ -191,7 +196,7 @@ public class PlaybackService extends MediaBrowserServiceCompat {
     public static Intent getPlayerActivityIntent(Context context) {
         boolean showVideoPlayer;
 
-        if (isRunning) {
+        if (isRunning()) {
             showVideoPlayer = currentMediaType == MediaType.VIDEO && !isCasting;
         } else {
             showVideoPlayer = PlaybackPreferences.getCurrentEpisodeIsVideo();

@@ -162,7 +162,7 @@ public class EpisodeDownloadWorker extends Worker {
             return Result.failure();
         }
 
-        if (downloader.cancelled) {
+        if (downloader.isCancelled()) {
             // This also happens when the worker was preempted, not just when the user cancelled it
             return Result.success();
         }

@@ -242,9 +242,9 @@ public class FeedInfoFragment extends Fragment implements MaterialToolbar.OnMenu
             while (i.hasNext()) {
                 FeedFunding funding = i.next();
                 for (FeedFunding other : fundingList) {
-                    if (TextUtils.equals(other.url, funding.url)) {
-                        if (other.content != null && funding.content != null
-                                && other.content.length() > funding.content.length()) {
+                    if (TextUtils.equals(other.getUrl(), funding.getUrl())) {
+                        if (other.getContent() != null && funding.getContent() != null
+                                && other.getContent().length() > funding.getContent().length()) {
                             i.remove();
                             break;
                         }
@@ -254,9 +254,9 @@ public class FeedInfoFragment extends Fragment implements MaterialToolbar.OnMenu
 
             StringBuilder str = new StringBuilder();
             for (FeedFunding funding : fundingList) {
-                str.append(funding.content.isEmpty()
+                str.append(funding.getContent().isEmpty()
                         ? getContext().getResources().getString(R.string.support_podcast)
-                        : funding.content).append(" ").append(funding.url);
+                        : funding.getContent()).append(" ").append(funding.getUrl());
                 str.append("\n");
             }
             str = new StringBuilder(StringUtils.trim(str.toString()));

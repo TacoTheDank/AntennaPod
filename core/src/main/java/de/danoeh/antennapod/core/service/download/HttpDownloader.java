@@ -150,7 +150,7 @@ public class HttpDownloader extends Downloader {
 
                 Log.d(TAG, "Starting download");
                 try {
-                    while (!cancelled && (count = connection.read(buffer)) != -1) {
+                    while (!isCancelled() && (count = connection.read(buffer)) != -1) {
                         out.write(buffer, 0, count);
                         request.setSoFar(request.getSoFar() + count);
                         int progressPercent = (int) (100.0 * request.getSoFar() / request.getSize());
@@ -159,7 +159,7 @@ public class HttpDownloader extends Downloader {
                 } catch (IOException e) {
                     Log.e(TAG, Log.getStackTraceString(e));
                 }
-                if (cancelled) {
+                if (isCancelled()) {
                     onCancelled();
                 } else {
                     // check if size specified in the response header is the same as the size of the
@@ -297,6 +297,6 @@ public class HttpDownloader extends Downloader {
     private void onCancelled() {
         Log.d(TAG, "Download was cancelled");
         result.setCancelled();
-        cancelled = true;
+        cancel();
     }
 }

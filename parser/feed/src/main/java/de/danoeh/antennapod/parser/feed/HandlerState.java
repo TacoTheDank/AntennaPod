@@ -20,7 +20,7 @@ public class HandlerState {
     /**
      * Feed that the Handler is currently processing.
      */
-    public Feed feed;
+    private Feed feed;
     /**
      * Contains links to related feeds, e.g. feeds with enclosures in other formats. The key of the map is the
      * URL of the feed, the value is the title

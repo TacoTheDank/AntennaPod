@@ -74,7 +74,7 @@ public class Rss2Generator implements FeedGenerator {
         ArrayList<FeedFunding> fundingList = feed.getPaymentLinks();
         if (fundingList != null) {
             for (FeedFunding funding: fundingList) {
-                GeneratorUtil.addPaymentLink(xml, funding.url, true);
+                GeneratorUtil.addPaymentLink(xml, funding.getUrl(), true);
             }
         }
 
@@ -118,9 +118,9 @@ public class Rss2Generator implements FeedGenerator {
                 if (fundingList != null) {
                     for (FeedFunding funding: fundingList) {
                         xml.startTag(PodcastIndex.NSTAG, "funding");
-                        xml.attribute(PodcastIndex.NSTAG, "url", funding.url);
-                        xml.text(funding.content);
-                        GeneratorUtil.addPaymentLink(xml, funding.url, true);
+                        xml.attribute(PodcastIndex.NSTAG, "url", funding.getUrl());
+                        xml.text(funding.getContent());
+                        GeneratorUtil.addPaymentLink(xml, funding.getUrl(), true);
                         xml.endTag(PodcastIndex.NSTAG, "funding");
                     }
                 }

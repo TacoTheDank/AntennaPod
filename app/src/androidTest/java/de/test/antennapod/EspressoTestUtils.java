@@ -216,7 +216,7 @@ public class EspressoTestUtils {
             // Calling stopSelf marks allows the system to destroy the service but the actual call
             // to onDestroy takes until the next GC of the system, which we can not influence.
             // Try to wait for the service at least a bit.
-            Awaitility.await().atMost(10, TimeUnit.SECONDS).until(() -> !PlaybackService.isRunning);
+            Awaitility.await().atMost(10, TimeUnit.SECONDS).until(() -> !PlaybackService.isRunning());
         } catch (ConditionTimeoutException e) {
             e.printStackTrace();
         }

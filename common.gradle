@@ -76,7 +76,7 @@ gradle.projectsEvaluated {
 apply plugin: 'com.github.spotbugs'
 
 spotbugs {
-    toolVersion = '4.7.3'
+    toolVersion = '4.8.3'
     effort = 'max'
     reportLevel = 'medium'
     excludeFilter = rootProject.file('config/spotbugs/exclude.xml')

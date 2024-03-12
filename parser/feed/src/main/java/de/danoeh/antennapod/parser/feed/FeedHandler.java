@@ -31,6 +31,6 @@ public class FeedHandler {
 
         saxParser.parse(inputSource, handler);
         inputStreamReader.close();
-        return new FeedHandlerResult(handler.state.feed, handler.state.alternateUrls, handler.state.redirectUrl);
+        return new FeedHandlerResult(handler.state.getFeed(), handler.state.alternateUrls, handler.state.redirectUrl);
     }
 }
