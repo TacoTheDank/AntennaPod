@@ -204,10 +204,6 @@ public class HttpDownloader extends Downloader {
                 return;
             }
             onFail(DownloadError.ERROR_IO_ERROR, e.getMessage());
-        } catch (NullPointerException e) {
-            // might be thrown by connection.getInputStream()
-            e.printStackTrace();
-            onFail(DownloadError.ERROR_CONNECTION_ERROR, request.getSource());
         }
     }
 
