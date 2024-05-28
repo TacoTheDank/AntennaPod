@@ -64,7 +64,6 @@ import de.danoeh.antennapod.model.feed.FeedMedia;
 import de.danoeh.antennapod.model.playback.Playable;
 import de.danoeh.antennapod.playback.cast.CastEnabledActivity;
 import de.danoeh.antennapod.storage.preferences.UserPreferences;
-import de.danoeh.antennapod.ui.common.PlaybackSpeedIndicatorView;
 import io.reactivex.Maybe;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.Disposable;
@@ -80,7 +79,7 @@ public class AudioPlayerFragment extends Fragment implements
     public static final int POS_DESCRIPTION = 1;
     private static final int NUM_CONTENT_FRAGMENTS = 2;
 
-    PlaybackSpeedIndicatorView butPlaybackSpeed;
+    ImageButton butPlaybackSpeed;
     TextView txtvPlaybackSpeed;
     private ViewPager2 pager;
     private TextView txtvPosition;
@@ -248,7 +247,7 @@ public class AudioPlayerFragment extends Fragment implements
     public void updatePlaybackSpeedButton(SpeedChangedEvent event) {
         String speedStr = new DecimalFormat("0.00").format(event.getNewSpeed());
         txtvPlaybackSpeed.setText(speedStr);
-        butPlaybackSpeed.setSpeed(event.getNewSpeed());
+        //butPlaybackSpeed.setSpeed(event.getNewSpeed());
     }
 
     private void loadMediaInfo(boolean includingChapters) {
