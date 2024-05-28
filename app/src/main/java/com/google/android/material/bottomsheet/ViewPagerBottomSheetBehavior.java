@@ -11,7 +11,7 @@ import androidx.viewpager2.widget.ViewPager2;
 import java.lang.ref.WeakReference;
 
 /**
- * Override {@link #findScrollingChild(View)} to support {@link ViewPager}'s nested scrolling.
+ * Override {@link #findScrollingChild(View)} to support {@link ViewPager2}'s nested scrolling.
  * In order to override package level method and field.
  * This class put in the same package path where {@link BottomSheetBehavior} located.
  * Source: https://medium.com/@hanru.yeh/funny-solution-that-makes-bottomsheetdialog-support-viewpager-with-nestedscrollingchilds-bfdca72235c3

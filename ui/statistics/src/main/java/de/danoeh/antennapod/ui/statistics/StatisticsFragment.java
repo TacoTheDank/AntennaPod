@@ -2,7 +2,6 @@ package de.danoeh.antennapod.ui.statistics;
 
 import android.content.Context;
 import android.content.DialogInterface;
-import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
@@ -11,18 +10,16 @@ import android.view.ViewGroup;
 import android.util.Log;
 
 import androidx.annotation.NonNull;
-import com.google.android.material.appbar.MaterialToolbar;
+import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.viewpager2.adapter.FragmentStateAdapter;
-import androidx.viewpager2.widget.ViewPager2;
 
-import com.google.android.material.tabs.TabLayout;
 import com.google.android.material.tabs.TabLayoutMediator;
 import de.danoeh.antennapod.ui.common.ConfirmationDialog;
 import de.danoeh.antennapod.storage.database.DBWriter;
 import de.danoeh.antennapod.event.StatisticsEvent;
 import de.danoeh.antennapod.ui.common.PagedToolbarFragment;
-import de.danoeh.antennapod.ui.echo.EchoActivity;
+import de.danoeh.antennapod.ui.common.databinding.PagerFragmentBinding;
 import de.danoeh.antennapod.ui.statistics.downloads.DownloadStatisticsFragment;
 import de.danoeh.antennapod.ui.statistics.subscriptions.SubscriptionStatisticsFragment;
 import de.danoeh.antennapod.ui.statistics.years.YearsStatisticsFragment;
@@ -41,52 +38,31 @@ public class StatisticsFragment extends PagedToolbarFragment {
     public static final String PREF_INCLUDE_MARKED_PLAYED = "countAll";
     public static final String PREF_FILTER_FROM = "filterFrom";
     public static final String PREF_FILTER_TO = "filterTo";
-
-
-    private static final int POS_SUBSCRIPTIONS = 0;
-    private static final int POS_YEARS = 1;
-    private static final int POS_SPACE_TAKEN = 2;
-    private static final int TOTAL_COUNT = 3;
-
-    private TabLayout tabLayout;
-    private ViewPager2 viewPager;
-    private MaterialToolbar toolbar;
+    private PagerFragmentBinding binding;
 
     @Override
-    public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
+    public View onCreateView(@NonNull final LayoutInflater inflater, @Nullable final ViewGroup container,
+                             @Nullable final Bundle savedInstanceState) {
         super.onCreateView(inflater, container, savedInstanceState);
         setHasOptionsMenu(true);
 
-        View rootView = inflater.inflate(R.layout.pager_fragment, container, false);
-        viewPager = rootView.findViewById(R.id.viewpager);
-        toolbar = rootView.findViewById(R.id.toolbar);
-        toolbar.setTitle(getString(R.string.statistics_label));
-        toolbar.inflateMenu(R.menu.statistics);
-        if (BuildConfig.DEBUG) {
-            toolbar.getMenu().findItem(R.id.debug_echo).setVisible(true);
-        }
-        toolbar.setNavigationOnClickListener(v -> getParentFragmentManager().popBackStack());
-        viewPager.setAdapter(new StatisticsPagerAdapter(this));
-        // Give the TabLayout the ViewPager
-        tabLayout = rootView.findViewById(R.id.sliding_tabs);
-        super.setupPagedToolbar(toolbar, viewPager);
-        new TabLayoutMediator(tabLayout, viewPager, (tab, position) -> {
-            switch (position) {
-                case POS_SUBSCRIPTIONS:
-                    tab.setText(R.string.subscriptions_label);
-                    break;
-                case POS_YEARS:
-                    tab.setText(R.string.years_statistics_label);
-                    break;
-                case POS_SPACE_TAKEN:
-                    tab.setText(R.string.downloads_label);
-                    break;
-                default:
-                    break;
-            }
-        }).attach();
-        return rootView;
+        binding = PagerFragmentBinding.inflate(inflater, container, false);
+        binding.pagerToolbar.setTitle(getString(R.string.statistics_label));
+        binding.pagerToolbar.inflateMenu(R.menu.statistics);
+        binding.pagerToolbar.setNavigationOnClickListener(v -> getParentFragmentManager().popBackStack());
+        final StatisticsStateAdapter adapter = new StatisticsStateAdapter(this);
+        binding.pagerViewpager2.setAdapter(adapter);
+        super.setupPagedToolbar(binding.pagerToolbar, binding.pagerViewpager2);
+        new TabLayoutMediator(binding.pagerTabLayout, binding.pagerViewpager2, (tab, position) ->
+                tab.setText(adapter.getPageTitle(position))
+        ).attach();
+        return binding.getRoot();
+    }
+
+    @Override
+    public void onDestroyView() {
+        super.onDestroyView();
+        binding = null;
     }
 
     @Override
@@ -94,8 +70,6 @@ public class StatisticsFragment extends PagedToolbarFragment {
         if (item.getItemId() == R.id.statistics_reset) {
             confirmResetStatistics();
             return true;
-        } else if (item.getItemId() == R.id.debug_echo) {
-            startActivity(new Intent(getContext(), EchoActivity.class));
         }
         return super.onOptionsItemSelected(item);
     }
@@ -129,15 +103,19 @@ public class StatisticsFragment extends PagedToolbarFragment {
                         error -> Log.e(TAG, Log.getStackTraceString(error)));
     }
 
-    public static class StatisticsPagerAdapter extends FragmentStateAdapter {
+    private static class StatisticsStateAdapter extends FragmentStateAdapter {
+        private static final int POS_SUBSCRIPTIONS = 0;
+        private static final int POS_YEARS = 1;
+        private static final int POS_SPACE_TAKEN = 2;
+        private static final int TOTAL_COUNT = 3;
 
-        StatisticsPagerAdapter(@NonNull Fragment fragment) {
+        StatisticsStateAdapter(@NonNull final Fragment fragment) {
             super(fragment);
         }
 
         @NonNull
         @Override
-        public Fragment createFragment(int position) {
+        public Fragment createFragment(final int position) {
             switch (position) {
                 case POS_SUBSCRIPTIONS:
                     return new SubscriptionStatisticsFragment();
@@ -152,6 +130,18 @@ public class StatisticsFragment extends PagedToolbarFragment {
         @Override
         public int getItemCount() {
             return TOTAL_COUNT;
+        }
+
+        public int getPageTitle(final int position) {
+            switch (position) {
+                case POS_SUBSCRIPTIONS:
+                    return R.string.subscriptions_label;
+                case POS_YEARS:
+                    return R.string.years_statistics_label;
+                default:
+                case POS_SPACE_TAKEN:
+                    return R.string.downloads_label;
+            }
         }
     }
 }

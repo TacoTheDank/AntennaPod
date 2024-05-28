@@ -104,6 +104,18 @@ public class AudioPlayerFragment extends Fragment implements
     private int currentChapterIndex = -1;
     private int duration;
 
+    private final ViewPager2.OnPageChangeCallback onPageChangeCallback = new ViewPager2.OnPageChangeCallback() {
+        @Override
+        public void onPageSelected(int position) {
+            pager.post(() -> {
+                if (getActivity() != null) {
+                    // By the time this is posted, the activity might be closed again.
+                    ((MainActivity) getActivity()).getBottomSheet().updateScrollingChild();
+                }
+            });
+        }
+    };
+
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater,
                              @Nullable ViewGroup container,
@@ -145,20 +157,10 @@ public class AudioPlayerFragment extends Fragment implements
         sbPosition.setOnSeekBarChangeListener(this);
 
         pager = root.findViewById(R.id.pager);
-        pager.setAdapter(new AudioPlayerPagerAdapter(this));
+        pager.setAdapter(new AudioPlayerStateAdapter(this));
         // Required for getChildAt(int) in ViewPagerBottomSheetBehavior to return the correct page
         pager.setOffscreenPageLimit((int) NUM_CONTENT_FRAGMENTS);
-        pager.registerOnPageChangeCallback(new ViewPager2.OnPageChangeCallback() {
-            @Override
-            public void onPageSelected(int position) {
-                pager.post(() -> {
-                    if (getActivity() != null) {
-                        // By the time this is posted, the activity might be closed again.
-                        ((MainActivity) getActivity()).getBottomSheet().updateScrollingChild();
-                    }
-                });
-            }
-        });
+        pager.registerOnPageChangeCallback(onPageChangeCallback);
 
         return root;
     }
@@ -332,6 +334,7 @@ public class AudioPlayerFragment extends Fragment implements
         controller.release();
         controller = null;
         progressIndicator.setVisibility(View.GONE); // Controller released; we will not receive buffering updates
+        pager.unregisterOnPageChangeCallback(onPageChangeCallback);
         EventBus.getDefault().unregister(this);
         if (disposable != null) {
             disposable.dispose();
@@ -532,10 +535,10 @@ public class AudioPlayerFragment extends Fragment implements
         toolbar.setVisibility(toolbarFadeProgress < 0.01f ? View.INVISIBLE : View.VISIBLE);
     }
 
-    private static class AudioPlayerPagerAdapter extends FragmentStateAdapter {
-        private static final String TAG = "AudioPlayerPagerAdapter";
+    private static class AudioPlayerStateAdapter extends FragmentStateAdapter {
+        private static final String TAG = "AudioPlayerStateAdapter";
 
-        public AudioPlayerPagerAdapter(@NonNull Fragment fragment) {
+        public AudioPlayerStateAdapter(@NonNull Fragment fragment) {
             super(fragment);
         }
 

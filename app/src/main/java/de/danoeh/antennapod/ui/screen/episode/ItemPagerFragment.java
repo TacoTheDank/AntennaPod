@@ -69,6 +69,13 @@ public class ItemPagerFragment extends Fragment implements MaterialToolbar.OnMen
     private Disposable disposable;
     private MaterialToolbar toolbar;
 
+    private final ViewPager2.OnPageChangeCallback onPageChangeCallback = new ViewPager2.OnPageChangeCallback() {
+        @Override
+        public void onPageSelected(int position) {
+            loadItem(feedItems[position]);
+        }
+    };
+
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
                              @Nullable Bundle savedInstanceState) {
@@ -94,16 +101,11 @@ public class ItemPagerFragment extends Fragment implements MaterialToolbar.OnMen
             newId = savedInstanceState.getInt(KEY_PAGER_ID, 0);
         }
         pager.setId(newId);
-        pager.setAdapter(new ItemPagerAdapter(this));
+        pager.setAdapter(new ItemStateAdapter(this));
         pager.setCurrentItem(feedItemPos, false);
         pager.setOffscreenPageLimit(1);
         loadItem(feedItems[feedItemPos]);
-        pager.registerOnPageChangeCallback(new ViewPager2.OnPageChangeCallback() {
-            @Override
-            public void onPageSelected(int position) {
-                loadItem(feedItems[position]);
-            }
-        });
+        pager.registerOnPageChangeCallback(onPageChangeCallback);
 
         EventBus.getDefault().register(this);
         return layout;
@@ -119,6 +121,7 @@ public class ItemPagerFragment extends Fragment implements MaterialToolbar.OnMen
     public void onDestroyView() {
         super.onDestroyView();
         EventBus.getDefault().unregister(this);
+        pager.unregisterOnPageChangeCallback(onPageChangeCallback);
         if (disposable != null) {
             disposable.dispose();
         }
@@ -183,9 +186,9 @@ public class ItemPagerFragment extends Fragment implements MaterialToolbar.OnMen
         }
     }
 
-    private class ItemPagerAdapter extends FragmentStateAdapter {
+    private class ItemStateAdapter extends FragmentStateAdapter {
 
-        ItemPagerAdapter(@NonNull Fragment fragment) {
+        ItemStateAdapter(@NonNull Fragment fragment) {
             super(fragment);
         }
 
