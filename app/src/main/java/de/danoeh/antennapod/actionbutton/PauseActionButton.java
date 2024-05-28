@@ -25,7 +25,7 @@ public class PauseActionButton extends ItemActionButton {
     @Override
     @DrawableRes
     public int getDrawable() {
-        return R.drawable.ic_pause;
+        return R.drawable.ic_pause_24dp;
     }
 
     @Override
